@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
 def load_airport_list():
-    # NOTE: The airport database was obtained from:
-    # NOTE:   * https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat
-
     # Import modules ...
     import csv
     import io
