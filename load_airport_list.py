@@ -20,7 +20,7 @@ def load_airport_list():
         print "INFO: The airport database is missing. It is included as a "
         print "      submodule in Git. If you did not clone this repository with"
         print "      the \"--recursive\" option then you can still pull down the"
-        print "      submodules by running \"git submodule init\"."
+        print "      submodule by running \"git submodule update --init\" now."
         raise RuntimeError("the airport database is missing")
 
     # Open CSV database ...
