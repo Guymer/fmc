@@ -13,7 +13,15 @@ def load_airport_list():
     airports = []
 
     # Make database path ...
-    dbpath = os.path.join(os.path.dirname(__file__), "airports.csv")
+    dbpath = os.path.join(os.path.dirname(__file__), "openflights", "data", "airports.dat")
+
+    # Check that the database is there ...
+    if not os.path.exists(dbpath):
+        print "INFO: The airport database is missing. It is included as a "
+        print "      submodule in Git. If you did not clone this repository with"
+        print "      the \"--recursive\" option then you can still pull down the"
+        print "      submodules by running \"git submodule init\"."
+        raise RuntimeError("the airport database is missing")
 
     # Open CSV database ...
     # HACK: The Python 2.X "csv" module does not natively handle unicode

@@ -1,0 +1,3 @@
+[submodule "openflights"]
+	path = openflights
+	url = https://github.com/jpatokal/openflights.git
