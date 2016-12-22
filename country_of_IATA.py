@@ -1,0 +1,11 @@
+# -*- coding: utf-8 -*-
+
+def country_of_IATA(airports, iata):
+    # Loop over all airports ...
+    for airport in airports:
+        # Check if this is the correct one and return it's country ...
+        if airport["IATA"] == iata:
+            return airport["Country"]
+
+    # Return default if it was not found ...
+    return "ERROR"
