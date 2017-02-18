@@ -83,7 +83,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
 
     # Create flight dictionary and loop over all flights ...
     flights = {}
-    total_dist = 0.0                                                            # [km]
+    total_dist = 0.0                                                            # [m]
     for row in csv.reader(open(flightLog, "rt")):
         # Extract IATA codes for this flight ...
         iata1 = row[0]
@@ -96,7 +96,8 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         # Find coordinates for this flight and add it's distance to the total ...
         lon1, lat1 = coordinates_of_IATA(db, iata1)                             # [deg], [deg]
         lon2, lat2 = coordinates_of_IATA(db, iata2)                             # [deg], [deg]
-        total_dist += dist_between_two_locs(lon1, lat1, lon2, lat2)             # [km]
+        dist, alpha1, alpha2 = dist_between_two_locs(lon1, lat1, lon2, lat2)    # [m], [deg], [deg]
+        total_dist += dist                                                      # [m]
 
         # Create flight name and skip this flight if it has already been drawn ...
         if iata1 < iata2:
@@ -123,6 +124,9 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
             extraCountries.append(country1)
         if country2 not in extraCountries:
             extraCountries.append(country2)
+
+    # Convert m to km ...
+    total_dist /= 1000.0                                                        # [km]
 
     # Add annotation ...
     label = "You have flown {0:,d} km. You have flown around the Earth {1:.1f} times. You have flown to the Moon {2:.1f} times.".format(int(total_dist), total_dist / (2.0 * math.pi * 6371.009), total_dist / 384402.0)
