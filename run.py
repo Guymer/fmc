@@ -96,7 +96,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         # Find coordinates for this flight and add it's distance to the total ...
         lon1, lat1 = coordinates_of_IATA(db, iata1)                             # [deg], [deg]
         lon2, lat2 = coordinates_of_IATA(db, iata2)                             # [deg], [deg]
-        dist, alpha1, alpha2 = pyguymer.dist_between_two_locs(lon1, lat1, lon2, lat2)    # [m], [deg], [deg]
+        dist, alpha1, alpha2 = pyguymer.calc_dist_between_two_locs(lon1, lat1, lon2, lat2)    # [m], [deg], [deg]
         total_dist += dist                                                      # [m]
 
         # Create flight name and skip this flight if it has already been drawn ...
