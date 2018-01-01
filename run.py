@@ -27,7 +27,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     )
     ax = matplotlib.pyplot.axes(projection = cartopy.crs.Robinson())
     ax.set_global()
-    ax.stock_img()
+    pyguymer.add_map_background(ax, resolution = "medium2048px")
     ax.coastlines(
         resolution = "10m",
         color = "black",
