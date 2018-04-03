@@ -4,10 +4,15 @@ This module contains all the functions required to create a map of the world wit
 
 ## Usage
 
-FMC can be run very easily, below is an example.
+FMC can be run very easily, below is an example (also found in [example.py](example.py)).
 
 ```python
+#!/usr/bin/env python
+
+# Import modules ...
 import fmc
+
+# Run function ...
 fmc.run(
     flightLog = "example.csv",
     extraCountries = [
