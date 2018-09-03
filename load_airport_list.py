@@ -24,24 +24,51 @@ def load_airport_list():
     # HACK: The Python 2.X "csv" module does not natively handle unicode
     #       characters so I strip them out using this ugly "io" function call.
     with io.open(dbpath, mode = "rt", encoding = "ascii", errors = "ignore") as fobj:
-        # Loop over all airports and append a dictionary to the list ...
+        # Loop over all airports ...
         for row in csv.reader(fobj):
-            airports.append(
-                {
-                    "ID": int(row[0]),
-                    "Name": row[1],
-                    "City": row[2],
-                    "Country": row[3],
-                    "IATA": row[4],
-                    "ICAO": row[5],
-                    "Latitude": float(row[6]),
-                    "Longitude": float(row[7]),
-                    "Altitude": float(row[8]),
-                    "UTC-offset": float(row[9]),
-                    "DST-scheme": row[10],
-                    "TZ-name": row[11]
-                }
-            )
+            # Load string parameters ...
+            tmp = {
+                      "Name" : row[ 1],
+                      "City" : row[ 2],
+                   "Country" : row[ 3],
+                      "IATA" : row[ 4],
+                      "ICAO" : row[ 5],
+                "DST-scheme" : row[10],
+                   "TZ-name" : row[11]
+            }
+
+            # Try loading numeric parameter ...
+            try:
+                tmp["ID"] = int(row[0])
+            except ValueError:
+                pass
+
+            # Try loading numeric parameter ...
+            try:
+                tmp["Latitude"] = float(row[6])
+            except ValueError:
+                pass
+
+            # Try loading numeric parameter ...
+            try:
+                tmp["Longitude"] = float(row[7])
+            except ValueError:
+                pass
+
+            # Try loading numeric parameter ...
+            try:
+                tmp["Altitude"] = float(row[8])
+            except ValueError:
+                pass
+
+            # Try loading numeric parameter ...
+            try:
+                tmp["UTC-offset"] = float(row[9])
+            except ValueError:
+                pass
+
+            # Append dictionary to the list ...
+            airports.append(tmp)
 
     # Return the full list ...
     return airports
