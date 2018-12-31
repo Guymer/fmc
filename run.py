@@ -182,6 +182,14 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
 
     # Loop over all flights ...
     for row in csv.reader(open(flightLog, "rt")):
+        # Extract IATA codes for this flight ...
+        iata1 = row[0]
+        iata2 = row[1]
+
+        # Skip this flight if the codes are not what I expect ...
+        if len(iata1) != 3 or len(iata2) != 3:
+            continue
+
         # Check if this is the first line ...
         if businessX == []:
             # Loop over the full range of years ...
@@ -193,14 +201,6 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
                 businessY.append(0.0)                                           # [km]
                 pleasureX.append(year + 0.25)
                 pleasureY.append(0.0)                                           # [km]
-
-        # Extract IATA codes for this flight ...
-        iata1 = row[0]
-        iata2 = row[1]
-
-        # Skip this flight if the codes are not what I expect ...
-        if len(iata1) != 3 or len(iata2) != 3:
-            continue
 
         # Find coordinates for this flight ...
         lon1, lat1 = coordinates_of_IATA(db, iata1)                             # [deg], [deg]
