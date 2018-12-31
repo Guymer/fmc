@@ -6,10 +6,10 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     import cartopy.crs
     import cartopy.io.shapereader
     import csv
+    import datetime
     import math
     import matplotlib
-    # NOTE: http://matplotlib.org/faq/howto_faq.html#matplotlib-in-a-web-application-server
-    matplotlib.use("Agg")
+    matplotlib.use("Agg")                                                       # NOTE: http://matplotlib.org/faq/howto_faq.html#matplotlib-in-a-web-application-server
     import matplotlib.image
     import matplotlib.pyplot
     import pyguymer
@@ -18,6 +18,9 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     from .coordinates_of_IATA import coordinates_of_IATA
     from .country_of_IATA import country_of_IATA
     from .load_airport_list import load_airport_list
+
+    # Configure matplotlib ...
+    matplotlib.pyplot.rcParams.update({"font.size" : 8})
 
     # Create plot and make it pretty ...
     fig = matplotlib.pyplot.figure(
@@ -63,9 +66,9 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
              73.0  # top
         ]
     )
-    pyguymer.add_map_background(axt, resolution = "medium0512px")
-    pyguymer.add_map_background(axl, resolution = "medium0512px")
-    pyguymer.add_map_background(axr, resolution = "medium0512px")
+    pyguymer.add_map_background(axt, resolution = "medium2048px")
+    pyguymer.add_map_background(axl, resolution = "medium2048px")
+    pyguymer.add_map_background(axr, resolution = "medium2048px")
     axt.coastlines(
         resolution = "10m",
              color = "black",
@@ -169,10 +172,28 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     # Load airport list ...
     db = load_airport_list()
 
-    # Create flight dictionary and loop over all flights ...
+    # Initizalize flight dictionary, histograms and total distance ...
     flights = {}
-    total_dist = 0.0                                                            # [m]
+    businessX = []
+    businessY = []
+    pleasureX = []
+    pleasureY = []
+    total_dist = 0.0                                                            # [km]
+
+    # Loop over all flights ...
     for row in csv.reader(open(flightLog, "rt")):
+        # Check if this is the first line ...
+        if businessX == []:
+            # Loop over the full range of years ...
+            for year in xrange(int(row[2][0:4]), int(datetime.date.today().strftime("%Y")) + 1):
+                # NOTE: This is a bit of a hack, I should really use NumPy but I
+                #       do not want to bring in another dependency that people
+                #       may not have.
+                businessX.append(year - 0.25)
+                businessY.append(0.0)                                           # [km]
+                pleasureX.append(year + 0.25)
+                pleasureY.append(0.0)                                           # [km]
+
         # Extract IATA codes for this flight ...
         iata1 = row[0]
         iata2 = row[1]
@@ -181,11 +202,22 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         if len(iata1) != 3 or len(iata2) != 3:
             continue
 
-        # Find coordinates for this flight and add it's distance to the total ...
+        # Find coordinates for this flight ...
         lon1, lat1 = coordinates_of_IATA(db, iata1)                             # [deg], [deg]
         lon2, lat2 = coordinates_of_IATA(db, iata2)                             # [deg], [deg]
         dist, alpha1, alpha2 = pyguymer.calc_dist_between_two_locs(lon1, lat1, lon2, lat2)    # [m], [deg], [deg]
-        total_dist += dist                                                      # [m]
+
+        # Convert m to km ...
+        dist /= 1000.0                                                          # [km]
+
+        # Add it's distance to the total ...
+        total_dist += dist                                                      # [km]
+
+        # Add it's distance to the histogram ...
+        if row[3].lower() == "business":
+            businessY[businessX.index(int(row[2][0:4]) - 0.25)] += dist         # [km]
+        elif row[3].lower() == "pleasure":
+            pleasureY[pleasureX.index(int(row[2][0:4]) + 0.25)] += dist         # [km]
 
         # Create flight name and skip this flight if it has already been drawn ...
         if iata1 < iata2:
@@ -227,8 +259,13 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         if country2 not in extraCountries:
             extraCountries.append(country2)
 
-    # Convert m to km ...
-    total_dist /= 1000.0                                                        # [km]
+    # Plot histograms ...
+    axm.bar(businessX, businessY, width = 0.45, label = "Business")
+    axm.bar(pleasureX, pleasureY, width = 0.45, label = "Pleasure")
+    axm.legend()
+    axm.set_ylabel("Distance [km/year]")
+    axm.xaxis.grid(True)
+    axm.yaxis.grid(True)
 
     # Add annotation ...
     label = "You have flown {0:,d} km. You have flown around the Earth {1:.1f} times. You have flown to the Moon {2:.1f} times.".format(int(total_dist), total_dist / (2.0 * math.pi * 6371.009), total_dist / 384402.0)
