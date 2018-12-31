@@ -22,58 +22,73 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     # Create plot and make it pretty ...
     fig = matplotlib.pyplot.figure(
         figsize = (9, 6),
-        dpi = 300,
+            dpi = 300,
         frameon = False
     )
-    ax = matplotlib.pyplot.axes(projection = cartopy.crs.Robinson())
-    ax.set_global()
-    pyguymer.add_map_background(ax, resolution = "medium2048px")
-    ax.coastlines(
+    axt = matplotlib.pyplot.subplot2grid((3, 3), (0, 0), projection = cartopy.crs.Robinson(), colspan = 3, rowspan = 2)
+    axl = matplotlib.pyplot.subplot2grid((3, 3), (2, 0), projection = cartopy.crs.Robinson())
+    axm = matplotlib.pyplot.subplot2grid((3, 3), (2, 1))
+    axr = matplotlib.pyplot.subplot2grid((3, 3), (2, 2), projection = cartopy.crs.Robinson())
+    axt.set_global()
+    pyguymer.add_map_background(axt, resolution = "medium2048px")
+    pyguymer.add_map_background(axl, resolution = "medium2048px")
+    pyguymer.add_map_background(axr, resolution = "medium2048px")
+    axt.coastlines(
         resolution = "10m",
-        color = "black",
-        linewidth = 0.1
+             color = "black",
+         linewidth = 0.1
+    )
+    axl.coastlines(
+        resolution = "10m",
+             color = "black",
+         linewidth = 0.1
+    )
+    axr.coastlines(
+        resolution = "10m",
+             color = "black",
+         linewidth = 0.1
     )
 
     # Add notable lines of latitude manually ...
     y1 = 66.0 + 33.0 / 60.0 + 46.2 / 3600.0                                     # [deg]
     y2 = 23.0 + 26.0 / 60.0 + 13.8 / 3600.0                                     # [deg]
-    matplotlib.pyplot.plot(
+    axt.plot(
         [-180.0, 180.0],
         [ y1,  y1],
         transform = cartopy.crs.PlateCarree(),
-        color = "black",
+            color = "black",
         linewidth = 0.1,
         linestyle = ":"
     )
-    matplotlib.pyplot.plot(
+    axt.plot(
         [-180.0, 180.0],
         [ y2,  y2],
         transform = cartopy.crs.PlateCarree(),
-        color = "black",
+            color = "black",
         linewidth = 0.1,
         linestyle = ":"
     )
-    matplotlib.pyplot.plot(
+    axt.plot(
         [-180.0, 180.0],
         [0.0, 0.0],
         transform = cartopy.crs.PlateCarree(),
-        color = "black",
+            color = "black",
         linewidth = 0.1,
         linestyle = ":"
     )
-    matplotlib.pyplot.plot(
+    axt.plot(
         [-180.0, 180.0],
         [-y2, -y2],
         transform = cartopy.crs.PlateCarree(),
-        color = "black",
+            color = "black",
         linewidth = 0.1,
         linestyle = ":"
     )
-    matplotlib.pyplot.plot(
+    axt.plot(
         [-180.0, 180.0],
         [-y1, -y1],
         transform = cartopy.crs.PlateCarree(),
-        color = "black",
+            color = "black",
         linewidth = 0.1,
         linestyle = ":"
     )
@@ -109,12 +124,12 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         flights[flight] = True
 
         # Draw the great circle ...
-        matplotlib.pyplot.plot(
+        axt.plot(
             [lon1, lon2],
             [lat1, lat2],
             transform = cartopy.crs.Geodetic(),
             linewidth = 1.0,
-            color = "red"
+                color = "red"
         )
 
         # Find countries and add them to the list if either are missing ...
@@ -130,14 +145,14 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
 
     # Add annotation ...
     label = "You have flown {0:,d} km. You have flown around the Earth {1:.1f} times. You have flown to the Moon {2:.1f} times.".format(int(total_dist), total_dist / (2.0 * math.pi * 6371.009), total_dist / 384402.0)
-    ax.text(
+    axt.text(
         0.5,
         -0.02,
         label,
         horizontalalignment = "center",
-        verticalalignment = "center",
-        transform = ax.transAxes,
-        fontsize = 5
+          verticalalignment = "center",
+                  transform = axt.transAxes,
+                   fontsize = 5
     )
 
     # Clean up the list ...
@@ -152,8 +167,8 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     # Find file containing all the country shapes ...
     shape_file = cartopy.io.shapereader.natural_earth(
         resolution = "10m",
-        category = "cultural",
-        name = "admin_0_countries"
+          category = "cultural",
+              name = "admin_0_countries"
     )
 
     # Loop over records ...
@@ -163,22 +178,25 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
             # Fill the country in and remove it from the list ...
             # NOTE: Removing them from the list enables us to print out the ones
             #       that where not found later on.
-            ax.add_geometries(
+            axt.add_geometries(
                 record.geometry,
                 cartopy.crs.PlateCarree(),
-                alpha = 0.5,
-                color = "red",
+                    alpha = 0.5,
+                    color = "red",
                 facecolor = "red",
                 linewidth = 0.1
             )
             extraCountries.remove(record.attributes["NAME"])
 
+    # Tighen plot ..
+    matplotlib.pyplot.tight_layout()
+
     # Save map as PNG ...
     matplotlib.pyplot.savefig(
         flightLog.replace(".csv", ".png"),
         bbox_inches = "tight",
-        dpi = 300,
-        pad_inches = 0.1
+                dpi = 300,
+         pad_inches = 0.1
     )
     matplotlib.pyplot.close("all")
 
