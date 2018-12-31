@@ -18,6 +18,6 @@ fmc.run(
     ],
     renames = {
         "Czech Republic" : "Czechia",
-        "United States": "United States of America"
+        "United States" : "United States of America"
     }
 )
