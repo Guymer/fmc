@@ -21,18 +21,51 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
 
     # Create plot and make it pretty ...
     fig = matplotlib.pyplot.figure(
-        figsize = (9, 6),
+        figsize = (12, 8),
             dpi = 300,
         frameon = False
     )
-    axt = matplotlib.pyplot.subplot2grid((3, 3), (0, 0), projection = cartopy.crs.Robinson(), colspan = 3, rowspan = 2)
-    axl = matplotlib.pyplot.subplot2grid((3, 3), (2, 0), projection = cartopy.crs.Robinson())
-    axm = matplotlib.pyplot.subplot2grid((3, 3), (2, 1))
-    axr = matplotlib.pyplot.subplot2grid((3, 3), (2, 2), projection = cartopy.crs.Robinson())
+    axt = matplotlib.pyplot.subplot2grid(
+        (3, 3),
+        (0, 0),
+        projection = cartopy.crs.Robinson(),
+           colspan = 3,
+           rowspan = 2
+    )
+    axl = matplotlib.pyplot.subplot2grid(
+        (3, 3),
+        (2, 0),
+        projection = cartopy.crs.PlateCarree()
+    )
+    axm = matplotlib.pyplot.subplot2grid(
+        (3, 3),
+        (2, 1)
+    )
+    axr = matplotlib.pyplot.subplot2grid(
+        (3, 3),
+        (2, 2),
+        projection = cartopy.crs.PlateCarree()
+    )
     axt.set_global()
-    pyguymer.add_map_background(axt, resolution = "medium2048px")
-    pyguymer.add_map_background(axl, resolution = "medium2048px")
-    pyguymer.add_map_background(axr, resolution = "medium2048px")
+    axl.set_extent(
+        [
+            -125.0, # left
+             -65.0, # right
+              20.0, # bottom
+              60.0  # top
+        ]
+    )
+    axr.set_extent(
+        [
+            -15.0, # left
+             45.0, # right
+             33.0, # bottom
+             73.0  # top
+        ]
+    )
+    pyguymer.add_map_background(axt, resolution = "medium0512px")
+    pyguymer.add_map_background(axl, resolution = "medium0512px")
+    pyguymer.add_map_background(axr, resolution = "medium0512px")
     axt.coastlines(
         resolution = "10m",
              color = "black",
@@ -57,7 +90,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         [ y1,  y1],
         transform = cartopy.crs.PlateCarree(),
             color = "black",
-        linewidth = 0.1,
+        linewidth = 0.5,
         linestyle = ":"
     )
     axt.plot(
@@ -65,7 +98,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         [ y2,  y2],
         transform = cartopy.crs.PlateCarree(),
             color = "black",
-        linewidth = 0.1,
+        linewidth = 0.5,
         linestyle = ":"
     )
     axt.plot(
@@ -73,7 +106,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         [0.0, 0.0],
         transform = cartopy.crs.PlateCarree(),
             color = "black",
-        linewidth = 0.1,
+        linewidth = 0.5,
         linestyle = ":"
     )
     axt.plot(
@@ -81,7 +114,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         [-y2, -y2],
         transform = cartopy.crs.PlateCarree(),
             color = "black",
-        linewidth = 0.1,
+        linewidth = 0.5,
         linestyle = ":"
     )
     axt.plot(
@@ -89,9 +122,49 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         [-y1, -y1],
         transform = cartopy.crs.PlateCarree(),
             color = "black",
-        linewidth = 0.1,
+        linewidth = 0.5,
         linestyle = ":"
     )
+
+    # Add notable lines manually ...
+    for xloc in [-120.0, -110.0, -100.0, -90.0, -80.0, -70.0]:
+        axl.plot(
+            [xloc, xloc],
+            [-90.0, 90.0],
+            transform = cartopy.crs.PlateCarree(),
+                color = "black",
+            linewidth = 0.5,
+            linestyle = ":"
+        )
+    for yloc in [20.0, 30.0, 40.0, 50.0, 60.0]:
+        axl.plot(
+            [-180.0, 180.0],
+            [yloc, yloc],
+            transform = cartopy.crs.PlateCarree(),
+                color = "black",
+            linewidth = 0.5,
+            linestyle = ":"
+        )
+
+    # Add notable lines manually ...
+    for xloc in [-10.0, 0.0, 10.0, 20.0, 30.0, 40.0]:
+        axr.plot(
+            [xloc, xloc],
+            [-90.0, 90.0],
+            transform = cartopy.crs.PlateCarree(),
+                color = "black",
+            linewidth = 0.5,
+            linestyle = ":"
+        )
+    for yloc in [40.0, 50.0, 60.0, 70.0]:
+        axr.plot(
+            [-180.0, 180.0],
+            [yloc, yloc],
+            transform = cartopy.crs.PlateCarree(),
+                color = "black",
+            linewidth = 0.5,
+            linestyle = ":"
+        )
 
     # Load airport list ...
     db = load_airport_list()
@@ -125,6 +198,20 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
 
         # Draw the great circle ...
         axt.plot(
+            [lon1, lon2],
+            [lat1, lat2],
+            transform = cartopy.crs.Geodetic(),
+            linewidth = 1.0,
+                color = "red"
+        )
+        axl.plot(
+            [lon1, lon2],
+            [lat1, lat2],
+            transform = cartopy.crs.Geodetic(),
+            linewidth = 1.0,
+                color = "red"
+        )
+        axr.plot(
             [lon1, lon2],
             [lat1, lat2],
             transform = cartopy.crs.Geodetic(),
@@ -184,12 +271,51 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
                     alpha = 0.5,
                     color = "red",
                 facecolor = "red",
-                linewidth = 0.1
+                linewidth = 0.5
+            )
+            axl.add_geometries(
+                record.geometry,
+                cartopy.crs.PlateCarree(),
+                    alpha = 0.5,
+                    color = "red",
+                facecolor = "red",
+                linewidth = 0.5
+            )
+            axr.add_geometries(
+                record.geometry,
+                cartopy.crs.PlateCarree(),
+                    alpha = 0.5,
+                    color = "red",
+                facecolor = "red",
+                linewidth = 0.5
             )
             extraCountries.remove(record.attributes["NAME"])
-
-    # Tighen plot ..
-    matplotlib.pyplot.tight_layout()
+        else:
+            # Outline the country ...
+            axt.add_geometries(
+                record.geometry,
+                cartopy.crs.PlateCarree(),
+                    alpha = 0.5,
+                    color = "black",
+                facecolor = "none",
+                linewidth = 0.5
+            )
+            axl.add_geometries(
+                record.geometry,
+                cartopy.crs.PlateCarree(),
+                    alpha = 0.5,
+                    color = "black",
+                facecolor = "none",
+                linewidth = 0.5
+            )
+            axr.add_geometries(
+                record.geometry,
+                cartopy.crs.PlateCarree(),
+                    alpha = 0.5,
+                    color = "black",
+                facecolor = "none",
+                linewidth = 0.5
+            )
 
     # Save map as PNG ...
     matplotlib.pyplot.savefig(
