@@ -1,6 +1,6 @@
 # Flight Map Creator (FMC)
 
-This module contains all the functions required to create a map of the world with all of your flights overlaid and all of the countries that you have visited shaded in. It also contains an [example.csv](example input file) so that you know what is required to make it work too.
+This module contains all the functions required to create a map of the world with all of your flights overlaid and all of the countries that you have visited shaded in. It also contains an [example input file](example.csv) so that you know what is required to make it work too.
 
 ## Usage
 
