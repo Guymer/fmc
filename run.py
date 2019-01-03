@@ -43,43 +43,49 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
 
     # Create plot and make it pretty ...
     fig = matplotlib.pyplot.figure(
-        figsize = (12, 8),
-            dpi = 300,
+        figsize = (8.0, 12.0),
+            dpi = 600,
         frameon = False
     )
     axt = matplotlib.pyplot.subplot2grid(
-        (3, 3),
-        (0, 0),
+        (29, 20),
+        ( 0, 0),
         projection = cartopy.crs.Robinson(),
-           colspan = 3,
-           rowspan = 2
+           colspan = 20,
+           rowspan = 10
     )
     axl = matplotlib.pyplot.subplot2grid(
-        (3, 3),
-        (2, 0),
+        (29, 20),
+        (10,  0),
         projection = cartopy.crs.Orthographic(
             central_longitude = 0.5 * (extl[0] + extl[1]),
              central_latitude = 0.5 * (extl[2] + extl[3])
-        )
-    )
-    axm = matplotlib.pyplot.subplot2grid(
-        (3, 3),
-        (2, 1)
+        ),
+        colspan = 10,
+        rowspan =  9
     )
     axr = matplotlib.pyplot.subplot2grid(
-        (3, 3),
-        (2, 2),
+        (29, 20),
+        (10, 10),
         projection = cartopy.crs.Orthographic(
             central_longitude = 0.5 * (extr[0] + extr[1]),
              central_latitude = 0.5 * (extr[2] + extr[3])
-        )
+        ),
+        colspan = 10,
+        rowspan =  9
+    )
+    axb = matplotlib.pyplot.subplot2grid(
+        (29, 20),
+        (19,  0),
+        colspan = 20,
+        rowspan = 10
     )
     axt.set_global()
     axl.set_extent(extl)
     axr.set_extent(extr)
-    pyguymer.add_map_background(axt, resolution = "medium2048px")
-    pyguymer.add_map_background(axl, resolution = "medium2048px")
-    pyguymer.add_map_background(axr, resolution = "medium2048px")
+    pyguymer.add_map_background(axt, resolution = "medium4096px")
+    pyguymer.add_map_background(axl, resolution = "medium4096px")
+    pyguymer.add_map_background(axr, resolution = "medium4096px")
     axt.coastlines(
         resolution = "10m",
              color = "black",
@@ -96,7 +102,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
          linewidth = 0.1
     )
 
-    # Add notable lines of latitude manually ...
+    # Add notable lines of latitude manually (top) ...
     y1 = 66.0 + 33.0 / 60.0 + 46.2 / 3600.0                                     # [deg]
     y2 = 23.0 + 26.0 / 60.0 + 13.8 / 3600.0                                     # [deg]
     axt.plot(
@@ -140,7 +146,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         linestyle = ":"
     )
 
-    # Add notable lines manually ...
+    # Add notable lines manually (left) ...
     for xloc in xrange(int(round(extl[0])), int(round(extl[1])) + 1):
         if xloc % 10 != 0:
             continue
@@ -166,7 +172,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
             linestyle = ":"
         )
 
-    # Add notable lines manually ...
+    # Add notable lines manually (right) ...
     for xloc in xrange(int(round(extr[0])), int(round(extr[1])) + 1):
         if xloc % 10 != 0:
             continue
@@ -283,18 +289,18 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
             extraCountries.append(country2)
 
     # Plot histograms ...
-    axm.bar(businessX, businessY, width = 2.0 * hw, label = "Business")
-    axm.bar(pleasureX, pleasureY, width = 2.0 * hw, label = "Pleasure")
-    axm.legend()
-    axm.set_ylabel("Distance [1000 km/year]")
-    axm.xaxis.grid(True)
-    axm.yaxis.grid(True)
+    axb.bar(businessX, businessY, width = 2.0 * hw, label = "Business")
+    axb.bar(pleasureX, pleasureY, width = 2.0 * hw, label = "Pleasure")
+    axb.legend()
+    axb.set_ylabel("Distance [1000 km/year]")
+    axb.xaxis.grid(True)
+    axb.yaxis.grid(True)
 
     # Add annotation ...
     label = (
-        "You have flown {0:,d} km."
-        " You have flown around the Earth {1:.1f} times."
-        " You have flown to the Moon {2:.1f} times."
+        "You have flown {0:,d} km. "
+        "You have flown around the Earth {1:.1f} times. "
+        "You have flown to the Moon {2:.1f} times."
     ).format(int(total_dist), total_dist / (2.0 * math.pi * 6371.009), total_dist / 384402.0)
     axt.text(
         0.5,
@@ -303,7 +309,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         horizontalalignment = "center",
           verticalalignment = "center",
                   transform = axt.transAxes,
-                   fontsize = 5
+                   fontsize = 6
     )
 
     # Clean up the list ...
@@ -385,7 +391,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     matplotlib.pyplot.savefig(
         flightLog.replace(".csv", ".png"),
         bbox_inches = "tight",
-                dpi = 300,
+                dpi = 600,
          pad_inches = 0.1
     )
     matplotlib.pyplot.close("all")
