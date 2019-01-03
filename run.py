@@ -22,6 +22,20 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     # Configure matplotlib ...
     matplotlib.pyplot.rcParams.update({"font.size" : 8})
 
+    # Set extents of the two sub-plots ...
+    extl = [
+        -125.0, # left
+         -65.0, # right
+          20.0, # bottom
+          60.0  # top
+    ]
+    extr = [
+        -15.0, # left
+         45.0, # right
+         33.0, # bottom
+         73.0  # top
+    ]
+
     # Create plot and make it pretty ...
     fig = matplotlib.pyplot.figure(
         figsize = (12, 8),
@@ -50,22 +64,8 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         projection = cartopy.crs.PlateCarree()
     )
     axt.set_global()
-    axl.set_extent(
-        [
-            -125.0, # left
-             -65.0, # right
-              20.0, # bottom
-              60.0  # top
-        ]
-    )
-    axr.set_extent(
-        [
-            -15.0, # left
-             45.0, # right
-             33.0, # bottom
-             73.0  # top
-        ]
-    )
+    axl.set_extent(extl)
+    axr.set_extent(extr)
     pyguymer.add_map_background(axt, resolution = "medium2048px")
     pyguymer.add_map_background(axl, resolution = "medium2048px")
     pyguymer.add_map_background(axr, resolution = "medium2048px")
@@ -133,7 +133,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     for xloc in [-120.0, -110.0, -100.0, -90.0, -80.0, -70.0]:
         axl.plot(
             [xloc, xloc],
-            [-90.0, 90.0],
+            [extl[2], extl[3]],
             transform = cartopy.crs.PlateCarree(),
                 color = "black",
             linewidth = 0.5,
@@ -141,7 +141,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         )
     for yloc in [20.0, 30.0, 40.0, 50.0, 60.0]:
         axl.plot(
-            [-180.0, 180.0],
+            [extl[0], extl[1]],
             [yloc, yloc],
             transform = cartopy.crs.PlateCarree(),
                 color = "black",
@@ -153,7 +153,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     for xloc in [-10.0, 0.0, 10.0, 20.0, 30.0, 40.0]:
         axr.plot(
             [xloc, xloc],
-            [-90.0, 90.0],
+            [extr[2], extr[3]],
             transform = cartopy.crs.PlateCarree(),
                 color = "black",
             linewidth = 0.5,
@@ -161,7 +161,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         )
     for yloc in [40.0, 50.0, 60.0, 70.0]:
         axr.plot(
-            [-180.0, 180.0],
+            [extr[0], extr[1]],
             [yloc, yloc],
             transform = cartopy.crs.PlateCarree(),
                 color = "black",
