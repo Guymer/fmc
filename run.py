@@ -175,9 +175,9 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     # Initizalize flight dictionary, histograms and total distance ...
     flights = {}
     businessX = []
-    businessY = []
+    businessY = []                                                              # [1000 km]
     pleasureX = []
-    pleasureY = []
+    pleasureY = []                                                              # [1000 km]
     total_dist = 0.0                                                            # [km]
 
     # Loop over all flights ...
@@ -198,9 +198,9 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
                 #       do not want to bring in another dependency that people
                 #       may not have.
                 businessX.append(year - 0.25)
-                businessY.append(0.0)                                           # [km]
+                businessY.append(0.0)                                           # [1000 km]
                 pleasureX.append(year + 0.25)
-                pleasureY.append(0.0)                                           # [km]
+                pleasureY.append(0.0)                                           # [1000 km]
 
         # Find coordinates for this flight ...
         lon1, lat1 = coordinates_of_IATA(db, iata1)                             # [deg], [deg]
@@ -208,16 +208,16 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         dist, alpha1, alpha2 = pyguymer.calc_dist_between_two_locs(lon1, lat1, lon2, lat2)    # [m], [deg], [deg]
 
         # Convert m to km ...
-        dist /= 1000.0                                                          # [km]
+        dist *= 0.001                                                           # [km]
 
         # Add it's distance to the total ...
         total_dist += dist                                                      # [km]
 
         # Add it's distance to the histogram ...
         if row[3].lower() == "business":
-            businessY[businessX.index(int(row[2][0:4]) - 0.25)] += dist         # [km]
+            businessY[businessX.index(int(row[2][0:4]) - 0.25)] += 0.001 * dist # [1000 km]
         elif row[3].lower() == "pleasure":
-            pleasureY[pleasureX.index(int(row[2][0:4]) + 0.25)] += dist         # [km]
+            pleasureY[pleasureX.index(int(row[2][0:4]) + 0.25)] += 0.001 * dist # [1000 km]
 
         # Create flight name and skip this flight if it has already been drawn ...
         if iata1 < iata2:
@@ -263,7 +263,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     axm.bar(businessX, businessY, width = 0.45, label = "Business")
     axm.bar(pleasureX, pleasureY, width = 0.45, label = "Pleasure")
     axm.legend()
-    axm.set_ylabel("Distance [km/year]")
+    axm.set_ylabel("Distance [1000 km/year]")
     axm.xaxis.grid(True)
     axm.yaxis.grid(True)
 
