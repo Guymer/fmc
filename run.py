@@ -15,6 +15,8 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     import pyguymer
 
     # Load sub-functions ...
+    from .calc_horizontal_gridlines import calc_horizontal_gridlines
+    from .calc_vertical_gridlines import calc_vertical_gridlines
     from .coordinates_of_IATA import coordinates_of_IATA
     from .country_of_IATA import country_of_IATA
     from .load_airport_list import load_airport_list
@@ -24,16 +26,16 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
 
     # Set extents of the two sub-plots ...
     extl = [
-        -125.0, # left
-         -65.0, # right
-          20.0, # bottom
-          60.0  # top
+        -120.0, # left
+         -70.0, # right
+          17.0, # bottom
+          55.0  # top
     ]
     extr = [
-        -15.0, # left
-         45.0, # right
+        -10.0, # left
+         40.0, # right
          33.0, # bottom
-         73.0  # top
+         71.0  # top
     ]
 
     # Set the half-width of the bars on the histogram ...
@@ -55,7 +57,10 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     axl = matplotlib.pyplot.subplot2grid(
         (3, 3),
         (2, 0),
-        projection = cartopy.crs.PlateCarree()
+        projection = cartopy.crs.Orthographic(
+            central_longitude = 0.5 * (extl[0] + extl[1]),
+             central_latitude = 0.5 * (extl[2] + extl[3])
+        )
     )
     axm = matplotlib.pyplot.subplot2grid(
         (3, 3),
@@ -64,7 +69,10 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     axr = matplotlib.pyplot.subplot2grid(
         (3, 3),
         (2, 2),
-        projection = cartopy.crs.PlateCarree()
+        projection = cartopy.crs.Orthographic(
+            central_longitude = 0.5 * (extr[0] + extr[1]),
+             central_latitude = 0.5 * (extr[2] + extr[3])
+        )
     )
     axt.set_global()
     axl.set_extent(extl)
@@ -133,19 +141,25 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     )
 
     # Add notable lines manually ...
-    for xloc in [-120.0, -110.0, -100.0, -90.0, -80.0, -70.0]:
+    for xloc in xrange(int(round(extl[0])), int(round(extl[1])) + 1):
+        if xloc % 10 != 0:
+            continue
+        xlocs, ylocs = calc_vertical_gridlines(xloc, extl)
         axl.plot(
-            [xloc, xloc],
-            [extl[2], extl[3]],
+            xlocs,
+            ylocs,
             transform = cartopy.crs.PlateCarree(),
                 color = "black",
             linewidth = 0.5,
             linestyle = ":"
         )
-    for yloc in [20.0, 30.0, 40.0, 50.0, 60.0]:
+    for yloc in xrange(int(round(extl[2])), int(round(extl[3])) + 1):
+        if yloc % 10 != 0:
+            continue
+        xlocs, ylocs = calc_horizontal_gridlines(yloc, extl)
         axl.plot(
-            [extl[0], extl[1]],
-            [yloc, yloc],
+            xlocs,
+            ylocs,
             transform = cartopy.crs.PlateCarree(),
                 color = "black",
             linewidth = 0.5,
@@ -153,19 +167,25 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         )
 
     # Add notable lines manually ...
-    for xloc in [-10.0, 0.0, 10.0, 20.0, 30.0, 40.0]:
+    for xloc in xrange(int(round(extr[0])), int(round(extr[1])) + 1):
+        if xloc % 10 != 0:
+            continue
+        xlocs, ylocs = calc_vertical_gridlines(xloc, extr)
         axr.plot(
-            [xloc, xloc],
-            [extr[2], extr[3]],
+            xlocs,
+            ylocs,
             transform = cartopy.crs.PlateCarree(),
                 color = "black",
             linewidth = 0.5,
             linestyle = ":"
         )
-    for yloc in [40.0, 50.0, 60.0, 70.0]:
+    for yloc in xrange(int(round(extr[2])), int(round(extr[3])) + 1):
+        if yloc % 10 != 0:
+            continue
+        xlocs, ylocs = calc_horizontal_gridlines(yloc, extr)
         axr.plot(
-            [extr[0], extr[1]],
-            [yloc, yloc],
+            xlocs,
+            ylocs,
             transform = cartopy.crs.PlateCarree(),
                 color = "black",
             linewidth = 0.5,
@@ -271,7 +291,11 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     axm.yaxis.grid(True)
 
     # Add annotation ...
-    label = "You have flown {0:,d} km. You have flown around the Earth {1:.1f} times. You have flown to the Moon {2:.1f} times.".format(int(total_dist), total_dist / (2.0 * math.pi * 6371.009), total_dist / 384402.0)
+    label = (
+        "You have flown {0:,d} km."
+        " You have flown around the Earth {1:.1f} times."
+        " You have flown to the Moon {2:.1f} times."
+    ).format(int(total_dist), total_dist / (2.0 * math.pi * 6371.009), total_dist / 384402.0)
     axt.text(
         0.5,
         -0.02,
@@ -308,7 +332,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
             axt.add_geometries(
                 record.geometry,
                 cartopy.crs.PlateCarree(),
-                    alpha = 0.5,
+                    alpha = 0.25,
                     color = "red",
                 facecolor = "red",
                 linewidth = 0.5
@@ -316,7 +340,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
             axl.add_geometries(
                 record.geometry,
                 cartopy.crs.PlateCarree(),
-                    alpha = 0.5,
+                    alpha = 0.25,
                     color = "red",
                 facecolor = "red",
                 linewidth = 0.5
@@ -324,7 +348,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
             axr.add_geometries(
                 record.geometry,
                 cartopy.crs.PlateCarree(),
-                    alpha = 0.5,
+                    alpha = 0.25,
                     color = "red",
                 facecolor = "red",
                 linewidth = 0.5
