@@ -36,6 +36,9 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
          73.0  # top
     ]
 
+    # Set the half-width of the bars on the histogram ...
+    hw = 0.2
+
     # Create plot and make it pretty ...
     fig = matplotlib.pyplot.figure(
         figsize = (12, 8),
@@ -197,9 +200,9 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
                 # NOTE: This is a bit of a hack, I should really use NumPy but I
                 #       do not want to bring in another dependency that people
                 #       may not have.
-                businessX.append(year - 0.25)
+                businessX.append(year - hw)
                 businessY.append(0.0)                                           # [1000 km]
-                pleasureX.append(year + 0.25)
+                pleasureX.append(year + hw)
                 pleasureY.append(0.0)                                           # [1000 km]
 
         # Find coordinates for this flight ...
@@ -215,9 +218,9 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
 
         # Add it's distance to the histogram ...
         if row[3].lower() == "business":
-            businessY[businessX.index(int(row[2][0:4]) - 0.25)] += 0.001 * dist # [1000 km]
+            businessY[businessX.index(int(row[2][0:4]) - hw)] += 0.001 * dist   # [1000 km]
         elif row[3].lower() == "pleasure":
-            pleasureY[pleasureX.index(int(row[2][0:4]) + 0.25)] += 0.001 * dist # [1000 km]
+            pleasureY[pleasureX.index(int(row[2][0:4]) + hw)] += 0.001 * dist   # [1000 km]
 
         # Create flight name and skip this flight if it has already been drawn ...
         if iata1 < iata2:
@@ -260,8 +263,8 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
             extraCountries.append(country2)
 
     # Plot histograms ...
-    axm.bar(businessX, businessY, width = 0.45, label = "Business")
-    axm.bar(pleasureX, pleasureY, width = 0.45, label = "Pleasure")
+    axm.bar(businessX, businessY, width = 2.0 * hw, label = "Business")
+    axm.bar(pleasureX, pleasureY, width = 2.0 * hw, label = "Pleasure")
     axm.legend()
     axm.set_ylabel("Distance [1000 km/year]")
     axm.xaxis.grid(True)
