@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 def coordinates_of_IATA(airports, iata):
-    # Loop over all airports ...
-    for airport in airports:
-        # Check if this is the correct one and return it's coordinates ...
-        if airport["IATA"] == iata:
-            return airport["Longitude"], airport["Latitude"]
+    # Check if the airport is in the database ...
+    if iata in airports:
+        # Return it's coordinates ...
+        return airports[iata][u"Longitude"], airports[iata][u"Latitude"]
+    else:
+        print u"WARNING: {0:s} is not in the airport database".format(iata)
 
-    # Return defaults if it was not found ...
-    return 0.0, 0.0
+        # Return defaults if it was not found ...
+        return 0.0, 0.0
