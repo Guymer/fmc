@@ -41,6 +41,8 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     # Set the half-width of the bars on the histogram ...
     hw = 0.2
 
+    print u"Creating blank plot ..."
+
     # Create plot and make it pretty ...
     fig = matplotlib.pyplot.figure(
         figsize = (8.0, 12.0),
@@ -198,6 +200,8 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
             linestyle = ":"
         )
 
+    print u"Finding out how far each flight was ..."
+
     # Load airport list ...
     db = load_airport_list()
 
@@ -312,24 +316,17 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
                    fontsize = 6
     )
 
-    # Clean up the list ...
-    # NOTE: The airport database and the country shape database use different
-    #       names for some countries. The user may provide a dictionary to
-    #       rename countries.
-    for country1, country2 in renames.iteritems():
-        if country1 in extraCountries:
-            extraCountries.remove(country1)
-            extraCountries.append(country2)
+    print u"Shading in the countries ..."
 
     # Find file containing all the country shapes ...
-    shape_file = cartopy.io.shapereader.natural_earth(
+    sfile = cartopy.io.shapereader.natural_earth(
         resolution = "10m",
           category = "cultural",
               name = "admin_0_countries"
     )
 
     # Loop over records ...
-    for record in cartopy.io.shapereader.Reader(shape_file).records():
+    for record in cartopy.io.shapereader.Reader(sfile).records():
         # Check if this country is in the list ...
         if record.attributes["NAME"] in extraCountries:
             # Fill the country in and remove it from the list ...
@@ -386,6 +383,8 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
                 facecolor = "none",
                 linewidth = 0.5
             )
+
+    print u"Saving the plot ..."
 
     # Save map as PNG ...
     matplotlib.pyplot.savefig(
