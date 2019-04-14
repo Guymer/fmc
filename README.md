@@ -1,6 +1,6 @@
 # Flight Map Creator (FMC)
 
-This module contains all the functions required to create a map of the world with all of your flights overlaid and all of the countries that you have visited shaded in. It also contains an [example input file](example.csv) so that you know what is required to make it work too. The format for a line is `departure airport IATA code`, `arrival airport IATA code`, `year of flight`, `Business`/`Pleasure`. Whilst the flights do not have to be in order in the CSV file the first flight *does* have to have occurred in the first year.
+This Python module contains all the functions required to create a map of the world with all of your flights overlaid and all of the countries that you have visited shaded in. This repository also contains an [example input CSV file](example.csv) so that you know what is required to make it work too. The format for a line is `departure airport IATA code`, `arrival airport IATA code`, `year of flight`, `Business`/`Pleasure`. Whilst the flights do not have to be in order in the CSV file the first flight *does* have to have occurred in the first year of the list.
 
 ## Usage
 
@@ -24,15 +24,11 @@ fmc.run(
         "Netherlands",
         "Russia",
         "Switzerland"
-    ],
-    renames = {
-        "Czech Republic" : "Czechia",
-        "United States" : "United States of America"
-    }
+    ]
 )
 ```
 
-You must pass it the path to a CSV file containing all of the flights that you have taken. Additionally, you can optionally pass it a list of other countries that you have visited but that you might not have flown to (`extraCountries`). FMC uses two different databases of countries behind the scenes and (very annoyingly) they use different names for some countries. If any of these are ones that you have visited then you can correct FMC's behaviour by explicitly providing a dictionary of countries to be renamed (`renames`).
+You must pass it the path to a CSV file containing all of the flights that you have taken. Additionally, you can optionally pass it a list of other countries that you have visited but that you might not have flown to (`extraCountries`).
 
 ## Example Output
 
