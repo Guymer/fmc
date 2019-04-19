@@ -8,6 +8,11 @@ with all of your flights overlaid and all of the countries that you have visited
 shaded in too.
 """
 
+# Ensure that this module is only imported by Python 2.x ...
+import sys
+if sys.version_info.major != 2:
+    raise Exception("the Python module \"fmc\" must only be used with Python 2.x")
+
 # Load sub-functions ...
 from .calc_horizontal_gridlines import calc_horizontal_gridlines
 from .calc_vertical_gridlines import calc_vertical_gridlines
