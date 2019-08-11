@@ -384,6 +384,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
 
     # Save map as PNG ...
     fig.savefig(flightLog.replace(".csv", ".png"), bbox_inches = "tight", dpi = 600, pad_inches = 0.1)
+    pyguymer3.exiftool(flightLog.replace(".csv", ".png"))
     pyguymer3.optipng(flightLog.replace(".csv", ".png"))
     matplotlib.pyplot.close("all")
 
