@@ -53,7 +53,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     hw = 0.2
 
     # Create plot and make it pretty ...
-    fig = matplotlib.pyplot.figure(figsize = (8.0, 12.0), dpi = 300)
+    fig = matplotlib.pyplot.figure(figsize = (8, 12), dpi = 300)
     axt = matplotlib.pyplot.subplot2grid(
         (29, 20),
         ( 0,  0),
