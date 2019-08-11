@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 def country_of_IATA(airports, iata):
     # Loop over all airports ...
     for airport in airports:

@@ -1,20 +1,31 @@
-# -*- coding: utf-8 -*-
-
 def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = {}):
-    # Import modules ...
-    import cartopy
-    import cartopy.crs
-    import cartopy.io.shapereader
+    # Import standard modules ...
     import csv
     import datetime
     import math
-    import matplotlib
-    matplotlib.use("Agg")                                                       # NOTE: http://matplotlib.org/faq/howto_faq.html#matplotlib-in-a-web-application-server
-    import matplotlib.image
-    import matplotlib.pyplot
-    import pyguymer
 
-    # Load sub-functions ...
+    # Import special modules ...
+    try:
+        import cartopy
+        import cartopy.crs
+        import cartopy.io.shapereader
+    except:
+        raise Exception("run \"pip install --user cartopy\"")
+    try:
+        import matplotlib
+        matplotlib.use("Agg")                                                   # NOTE: http://matplotlib.org/faq/howto_faq.html#matplotlib-in-a-web-application-server
+        import matplotlib.image
+        import matplotlib.pyplot
+    except:
+        raise Exception("run \"pip install --user matplotlib\"")
+
+    # Import my modules ...
+    try:
+        import pyguymer3
+    except:
+        raise Exception("you need to have the Python module from https://github.com/Guymer/PyGuymer3 located somewhere in your $PYTHONPATH")
+
+    # Import sub-functions ...
     from .calc_horizontal_gridlines import calc_horizontal_gridlines
     from .calc_vertical_gridlines import calc_vertical_gridlines
     from .coordinates_of_IATA import coordinates_of_IATA
@@ -42,14 +53,10 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     hw = 0.2
 
     # Create plot and make it pretty ...
-    fig = matplotlib.pyplot.figure(
-        figsize = (8.0, 12.0),
-            dpi = 600,
-        frameon = False
-    )
+    fig = matplotlib.pyplot.figure(figsize = (8.0, 12.0), dpi = 600)
     axt = matplotlib.pyplot.subplot2grid(
         (29, 20),
-        ( 0, 0),
+        ( 0,  0),
         projection = cartopy.crs.Robinson(),
            colspan = 20,
            rowspan = 10
@@ -83,24 +90,12 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     axt.set_global()
     axl.set_extent(extl)
     axr.set_extent(extr)
-    pyguymer.add_map_background(axt, resolution = "medium4096px")
-    pyguymer.add_map_background(axl, resolution = "medium4096px")
-    pyguymer.add_map_background(axr, resolution = "medium4096px")
-    axt.coastlines(
-        resolution = "10m",
-             color = "black",
-         linewidth = 0.1
-    )
-    axl.coastlines(
-        resolution = "10m",
-             color = "black",
-         linewidth = 0.1
-    )
-    axr.coastlines(
-        resolution = "10m",
-             color = "black",
-         linewidth = 0.1
-    )
+    pyguymer3.add_map_background(axt, resolution = "medium4096px")
+    pyguymer3.add_map_background(axl, resolution = "medium4096px")
+    pyguymer3.add_map_background(axr, resolution = "medium4096px")
+    axt.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
+    axl.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
+    axr.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
 
     # Add notable lines of latitude manually (top) ...
     y1 = 66.0 + 33.0 / 60.0 + 46.2 / 3600.0                                     # [deg]
@@ -147,7 +142,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     )
 
     # Add notable lines manually (left) ...
-    for xloc in xrange(int(round(extl[0])), int(round(extl[1])) + 1):
+    for xloc in range(int(round(extl[0])), int(round(extl[1])) + 1):
         if xloc % 10 != 0:
             continue
         xlocs, ylocs = calc_vertical_gridlines(xloc, extl)
@@ -159,7 +154,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
             linewidth = 0.5,
             linestyle = ":"
         )
-    for yloc in xrange(int(round(extl[2])), int(round(extl[3])) + 1):
+    for yloc in range(int(round(extl[2])), int(round(extl[3])) + 1):
         if yloc % 10 != 0:
             continue
         xlocs, ylocs = calc_horizontal_gridlines(yloc, extl)
@@ -173,7 +168,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         )
 
     # Add notable lines manually (right) ...
-    for xloc in xrange(int(round(extr[0])), int(round(extr[1])) + 1):
+    for xloc in range(int(round(extr[0])), int(round(extr[1])) + 1):
         if xloc % 10 != 0:
             continue
         xlocs, ylocs = calc_vertical_gridlines(xloc, extr)
@@ -185,7 +180,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
             linewidth = 0.5,
             linestyle = ":"
         )
-    for yloc in xrange(int(round(extr[2])), int(round(extr[3])) + 1):
+    for yloc in range(int(round(extr[2])), int(round(extr[3])) + 1):
         if yloc % 10 != 0:
             continue
         xlocs, ylocs = calc_horizontal_gridlines(yloc, extr)
@@ -222,7 +217,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         # Check if this is the first line ...
         if businessX == []:
             # Loop over the full range of years ...
-            for year in xrange(int(row[2][0:4]), int(datetime.date.today().strftime("%Y")) + 1):
+            for year in range(int(row[2][0:4]), int(datetime.date.today().strftime("%Y")) + 1):
                 # NOTE: This is a bit of a hack, I should really use NumPy but I
                 #       do not want to bring in another dependency that people
                 #       may not have.
@@ -234,7 +229,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
         # Find coordinates for this flight ...
         lon1, lat1 = coordinates_of_IATA(db, iata1)                             # [deg], [deg]
         lon2, lat2 = coordinates_of_IATA(db, iata2)                             # [deg], [deg]
-        dist, alpha1, alpha2 = pyguymer.calc_dist_between_two_locs(lon1, lat1, lon2, lat2)    # [m], [deg], [deg]
+        dist, alpha1, alpha2 = pyguymer3.calc_dist_between_two_locs(lon1, lat1, lon2, lat2)    # [m], [deg], [deg]
 
         # Convert m to km ...
         dist *= 0.001                                                           # [km]
@@ -298,9 +293,9 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
 
     # Add annotation ...
     label = (
-        "You have flown {0:,d} km. "
-        "You have flown around the Earth {1:.1f} times. "
-        "You have flown to the Moon {2:.1f} times."
+        "You have flown {:,d} km. "
+        "You have flown around the Earth {:.1f} times. "
+        "You have flown to the Moon {:.1f} times."
     ).format(int(total_dist), total_dist / (2.0 * math.pi * 6371.009), total_dist / 384402.0)
     axt.text(
         0.5,
@@ -316,7 +311,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     # NOTE: The airport database and the country shape database use different
     #       names for some countries. The user may provide a dictionary to
     #       rename countries.
-    for country1, country2 in renames.iteritems():
+    for country1, country2 in renames.items():
         if country1 in extraCountries:
             extraCountries.remove(country1)
             extraCountries.append(country2)
@@ -388,14 +383,10 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
             )
 
     # Save map as PNG ...
-    matplotlib.pyplot.savefig(
-        flightLog.replace(".csv", ".png"),
-        bbox_inches = "tight",
-                dpi = 600,
-         pad_inches = 0.1
-    )
+    fig.savefig(flightLog.replace(".csv", ".png"), bbox_inches = "tight", dpi = 600, pad_inches = 0.1)
+    pyguymer3.optipng(flightLog.replace(".csv", ".png"))
     matplotlib.pyplot.close("all")
 
     # Print out the countries that were not drawn ...
     for country in extraCountries:
-        print "\"{0:s}\" was not drawn.".format(country)
+        print("\"{:s}\" was not drawn.".format(country))

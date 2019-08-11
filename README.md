@@ -1,13 +1,13 @@
 # Flight Map Creator (FMC)
 
-This module contains all the functions required to create a map of the world with all of your flights overlaid and all of the countries that you have visited shaded in. It also contains an [example input file](example.csv) so that you know what is required to make it work too. The format for a line is `departure airport IATA code`, `arrival airport IATA code`, `year of flight`, `Business`/`Pleasure`. Whilst the flights do not have to be in order in the CSV file the first flight *does* have to have occurred in the first year.
+This Python 3.x module contains all the functions required to create a map of the world with all of your flights overlaid and all of the countries that you have visited shaded in. It also contains an [example input file](example.csv) so that you know what is required to make it work too. The format for a line is `departure airport IATA code`, `arrival airport IATA code`, `year of flight`, `Business`/`Pleasure`. Whilst the flights do not have to be in order in the CSV file the first flight *does* have to have occurred in the first year.
 
 ## Usage
 
 FMC can be run very easily, below is an example (also found in [example.py](example.py)).
 
 ```python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Import modules ...
 import fmc
@@ -46,7 +46,7 @@ FMC requires the following Python modules to be installed and available in your 
 
 * [cartopy](https://pypi.org/project/Cartopy)
 * [matplotlib](https://pypi.org/project/matplotlib)
-* [pyguymer](https://github.com/Guymer/PyGuymer)
+* [pyguymer3](https://github.com/Guymer/PyGuymer3)
 
 FMC uses some [Natural Earth](http://www.naturalearthdata.com/) resources via the [Cartopy](http://scitools.org.uk/cartopy/) module. If they do not exist on your system then Cartopy will download them for you in the background. Consequently, a working internet connection may be required the first time you run FMC.
 

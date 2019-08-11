@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 def coordinates_of_IATA(airports, iata):
     # Loop over all airports ...
     for airport in airports:

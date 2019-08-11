@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-
 def load_airport_list():
-    # Import modules ...
+    # Import standard modules ...
     import csv
-    import io
     import os
 
     # Create the empty list ...
@@ -12,18 +9,16 @@ def load_airport_list():
     # Make database path ...
     dbpath = os.path.join(os.path.dirname(__file__), "openflights", "data", "airports.dat")
 
-    # Check that the database is there ...
+    # Check that database is there ...
     if not os.path.exists(dbpath):
-        print "INFO: The airport database is missing. It is included as a "
-        print "      submodule in Git. If you did not clone this repository with"
-        print "      the \"--recursive\" option then you can still pull down the"
-        print "      submodule by running \"git submodule update --init\" now."
+        print("INFO: The airport database is missing. It is included as a ")
+        print("      submodule in Git. If you did not clone this repository with")
+        print("      the \"--recursive\" option then you can still pull down the")
+        print("      submodule by running \"git submodule update --init\" now.")
         raise Exception("the airport database is missing")
 
-    # Open CSV database ...
-    # HACK: The Python 2.X "csv" module does not natively handle unicode
-    #       characters so I strip them out using this ugly "io" function call.
-    with io.open(dbpath, mode = "rt", encoding = "ascii", errors = "ignore") as fobj:
+    # Open database ...
+    with open(dbpath, "rt") as fobj:
         # Loop over all airports ...
         for row in csv.reader(fobj):
             # Load string parameters ...
