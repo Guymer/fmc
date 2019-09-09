@@ -9,7 +9,7 @@ ehthumbs.db
 Thumbs.db
 
 # Hide compiled code ...
-*.pyc
+__pycache__
 
 # Hide output of Pylint ...
 pylint.log
