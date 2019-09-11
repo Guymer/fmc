@@ -362,7 +362,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
                 cartopy.crs.PlateCarree(),
                     alpha = 0.5,
                     color = "black",
-                facecolor = "none",
+                facecolor = (0, 0, 0, 0),
                 linewidth = 0.5
             )
             axl.add_geometries(
@@ -370,7 +370,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
                 cartopy.crs.PlateCarree(),
                     alpha = 0.5,
                     color = "black",
-                facecolor = "none",
+                facecolor = (0, 0, 0, 0),
                 linewidth = 0.5
             )
             axr.add_geometries(
@@ -378,7 +378,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
                 cartopy.crs.PlateCarree(),
                     alpha = 0.5,
                     color = "black",
-                facecolor = "none",
+                facecolor = (0, 0, 0, 0),
                 linewidth = 0.5
             )
 
