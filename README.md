@@ -40,6 +40,8 @@ FMC will create a PNG in the directory of the CSV file. Below is the result for 
 
 ![FMC output for the example](example.png)
 
+FMC will also print out a list of countries which it thinks that you have visited.
+
 ## Dependencies
 
 FMC requires the following Python modules to be installed and available in your `PYTHONPATH`.
