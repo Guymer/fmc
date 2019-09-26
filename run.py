@@ -323,10 +323,16 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
               name = "admin_0_countries"
     )
 
+    # Initizalize visited list ...
+    visited = []
+
     # Loop over records ...
     for record in cartopy.io.shapereader.Reader(shape_file).records():
         # Check if this country is in the list ...
         if record.attributes["NAME"] in extraCountries:
+            # Append country name to visited list ...
+            visited.append(record.attributes["NAME"])
+
             # Fill the country in and remove it from the list ...
             # NOTE: Removing them from the list enables us to print out the ones
             #       that where not found later on.
@@ -391,3 +397,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     # Print out the countries that were not drawn ...
     for country in extraCountries:
         print("\"{:s}\" was not drawn.".format(country))
+
+    # Print out the countries that have been visited ...
+    for country in visited:
+        print("\"{:s}\" has been visited.".format(country))
