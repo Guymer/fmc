@@ -395,9 +395,9 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     matplotlib.pyplot.close("all")
 
     # Print out the countries that were not drawn ...
-    for country in extraCountries:
+    for country in sorted(extraCountries):
         print("\"{:s}\" was not drawn.".format(country))
 
     # Print out the countries that have been visited ...
-    for country in visited:
+    for country in sorted(visited):
         print("\"{:s}\" has been visited.".format(country))
