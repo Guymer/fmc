@@ -1,4 +1,4 @@
-def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = {}):
+def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited = [], renames = {}):
     # Import standard modules ...
     import csv
     import datetime
@@ -329,7 +329,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
     # Loop over records ...
     for record in cartopy.io.shapereader.Reader(shape_file).records():
         # Check if this country is in the list ...
-        if record.attributes["NAME"] in extraCountries:
+        if record.attributes["NAME"] in extraCountries and record.attributes["NAME"] not in notVisited:
             # Append country name to visited list ...
             visited.append(record.attributes["NAME"])
 

@@ -14,10 +14,14 @@ fmc.run(
         "Nepal",
         "Netherlands",
         "Russia",
-        "Switzerland"
+        "Switzerland",
+    ],
+    notVisited = [
+        "Hong Kong",
+        "Singapore",
     ],
     renames = {
         "Czech Republic" : "Czechia",
-        "United States" : "United States of America"
+        "United States" : "United States of America",
     }
 )
