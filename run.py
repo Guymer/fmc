@@ -339,25 +339,22 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
             axt.add_geometries(
                 record.geometry,
                 cartopy.crs.PlateCarree(),
-                    alpha = 0.25,
-                    color = "red",
-                facecolor = "red",
+                edgecolor = (1.0, 0.0, 0.0, 1.0),
+                facecolor = (1.0, 0.0, 0.0, 0.5),
                 linewidth = 0.5
             )
             axl.add_geometries(
                 record.geometry,
                 cartopy.crs.PlateCarree(),
-                    alpha = 0.25,
-                    color = "red",
-                facecolor = "red",
+                edgecolor = (1.0, 0.0, 0.0, 1.0),
+                facecolor = (1.0, 0.0, 0.0, 0.5),
                 linewidth = 0.5
             )
             axr.add_geometries(
                 record.geometry,
                 cartopy.crs.PlateCarree(),
-                    alpha = 0.25,
-                    color = "red",
-                facecolor = "red",
+                edgecolor = (1.0, 0.0, 0.0, 1.0),
+                facecolor = (1.0, 0.0, 0.0, 0.5),
                 linewidth = 0.5
             )
             extraCountries.remove(record.attributes["NAME"])
@@ -366,25 +363,22 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], renames = 
             axt.add_geometries(
                 record.geometry,
                 cartopy.crs.PlateCarree(),
-                    alpha = 0.5,
-                    color = "black",
-                facecolor = (0, 0, 0, 0),
+                edgecolor = (0.0, 0.0, 0.0, 1.0),
+                facecolor = (0.0, 0.0, 0.0, 0.0),
                 linewidth = 0.5
             )
             axl.add_geometries(
                 record.geometry,
                 cartopy.crs.PlateCarree(),
-                    alpha = 0.5,
-                    color = "black",
-                facecolor = (0, 0, 0, 0),
+                edgecolor = (0.0, 0.0, 0.0, 1.0),
+                facecolor = (0.0, 0.0, 0.0, 0.0),
                 linewidth = 0.5
             )
             axr.add_geometries(
                 record.geometry,
                 cartopy.crs.PlateCarree(),
-                    alpha = 0.5,
-                    color = "black",
-                facecolor = (0, 0, 0, 0),
+                edgecolor = (0.0, 0.0, 0.0, 1.0),
+                facecolor = (0.0, 0.0, 0.0, 0.0),
                 linewidth = 0.5
             )
 
