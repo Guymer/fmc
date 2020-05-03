@@ -54,7 +54,7 @@ FMC requires the following Python modules to be installed and available in your 
 * [matplotlib](https://pypi.org/project/matplotlib)
 * [pyguymer3](https://github.com/Guymer/PyGuymer3)
 
-FMC uses some [Natural Earth](http://www.naturalearthdata.com/) resources via the [Cartopy](http://scitools.org.uk/cartopy/) module. If they do not exist on your system then Cartopy will download them for you in the background. Consequently, a working internet connection may be required the first time you run FMC.
+FMC uses some [Natural Earth](https://www.naturalearthdata.com/) resources via the [Cartopy](https://scitools.org.uk/cartopy/docs/latest/) module. If they do not exist on your system then Cartopy will download them for you in the background. Consequently, a working internet connection may be required the first time you run FMC.
 
 ## To Do
 

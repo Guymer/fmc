@@ -13,7 +13,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
         raise Exception("run \"pip install --user cartopy\"")
     try:
         import matplotlib
-        matplotlib.use("Agg")                                                   # NOTE: http://matplotlib.org/faq/howto_faq.html#matplotlib-in-a-web-application-server
+        matplotlib.use("Agg")                                                   # NOTE: https://matplotlib.org/gallery/user_interfaces/canvasagg.html
         import matplotlib.image
         import matplotlib.pyplot
     except:
