@@ -23,7 +23,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     try:
         import pyguymer3
     except:
-        raise Exception("you need to have the Python module from https://github.com/Guymer/PyGuymer3 located somewhere in your $PYTHONPATH")
+        raise Exception("\"pyguymer3\" is not installed; you need to have the Python module from https://github.com/Guymer/PyGuymer3 located somewhere in your $PYTHONPATH") from None
 
     # Import sub-functions ...
     from .calc_horizontal_gridlines import calc_horizontal_gridlines
