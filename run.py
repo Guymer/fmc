@@ -10,14 +10,14 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
         import cartopy.crs
         import cartopy.io.shapereader
     except:
-        raise Exception("run \"pip install --user cartopy\"")
+        raise Exception("\"cartopy\" is not installed; run \"pip install --user Cartopy\"") from None
     try:
         import matplotlib
         matplotlib.use("Agg")                                                   # NOTE: https://matplotlib.org/gallery/user_interfaces/canvasagg.html
         import matplotlib.image
         import matplotlib.pyplot
     except:
-        raise Exception("run \"pip install --user matplotlib\"")
+        raise Exception("\"matplotlib\" is not installed; run \"pip install --user matplotlib\"") from None
 
     # Import my modules ...
     try:

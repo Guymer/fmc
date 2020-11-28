@@ -15,7 +15,7 @@ def load_airport_list():
         print("      submodule in Git. If you did not clone this repository with")
         print("      the \"--recursive\" option then you can still pull down the")
         print("      submodule by running \"git submodule update --init\" now.")
-        raise Exception("the airport database is missing")
+        raise Exception("the airport database is missing") from None
 
     # Open database ...
     with open(dbpath, "rt") as fobj:

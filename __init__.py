@@ -19,4 +19,4 @@ from .run import run
 
 # Ensure that this module is only imported by Python 3.x ...
 if sys.version_info.major != 3:
-    raise Exception("the Python module \"fmc\" must only be used with Python 3.x")
+    raise Exception("the Python module \"fmc\" must only be used with Python 3.x") from None
