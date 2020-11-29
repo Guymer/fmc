@@ -90,16 +90,16 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     axt.set_global()
     axl.set_extent(extl)
     axr.set_extent(extr)
-    pyguymer3.add_map_background(axt, resolution = "medium4096px")
-    pyguymer3.add_map_background(axl, resolution = "medium4096px")
-    pyguymer3.add_map_background(axr, resolution = "medium4096px")
+    pyguymer3.add_map_background(axt, resolution = "large4096px")
+    pyguymer3.add_map_background(axl, resolution = "large4096px")
+    pyguymer3.add_map_background(axr, resolution = "large4096px")
     axt.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
     axl.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
     axr.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
 
     # Add notable lines of latitude manually (top) ...
-    y1 = 66.0 + 33.0 / 60.0 + 46.2 / 3600.0                                     # [deg]
-    y2 = 23.0 + 26.0 / 60.0 + 13.8 / 3600.0                                     # [deg]
+    y1 = 66.0 + 33.0 / 60.0 + 46.2 / 3600.0                                     # [°]
+    y2 = 23.0 + 26.0 / 60.0 + 13.8 / 3600.0                                     # [°]
     axt.plot(
         [-180.0, 180.0],
         [ y1,  y1],
@@ -227,9 +227,9 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
                 pleasureY.append(0.0)                                           # [1000 km]
 
         # Find coordinates for this flight ...
-        lon1, lat1 = coordinates_of_IATA(db, iata1)                             # [deg], [deg]
-        lon2, lat2 = coordinates_of_IATA(db, iata2)                             # [deg], [deg]
-        dist, alpha1, alpha2 = pyguymer3.calc_dist_between_two_locs(lon1, lat1, lon2, lat2)    # [m], [deg], [deg]
+        lon1, lat1 = coordinates_of_IATA(db, iata1)                             # [°], [°]
+        lon2, lat2 = coordinates_of_IATA(db, iata2)                             # [°], [°]
+        dist, alpha1, alpha2 = pyguymer3.calc_dist_between_two_locs(lon1, lat1, lon2, lat2)    # [m], [°], [°]
 
         # Convert m to km ...
         dist *= 0.001                                                           # [km]
