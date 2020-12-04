@@ -43,10 +43,10 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
           55.0  # top
     ]
     extr = [
-        -10.0, # left
-         40.0, # right
-         33.0, # bottom
-         71.0  # top
+         -10.0, # left
+          40.0, # right
+          33.0, # bottom
+          71.0  # top
     ]
 
     # Set the half-width of the bars on the histogram ...
@@ -229,7 +229,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
         # Find coordinates for this flight ...
         lon1, lat1 = coordinates_of_IATA(db, iata1)                             # [°], [°]
         lon2, lat2 = coordinates_of_IATA(db, iata2)                             # [°], [°]
-        dist, alpha1, alpha2 = pyguymer3.calc_dist_between_two_locs(lon1, lat1, lon2, lat2)    # [m], [°], [°]
+        dist, alpha1, alpha2 = pyguymer3.calc_dist_between_two_locs(lon1, lat1, lon2, lat2) # [m], [°], [°]
 
         # Convert m to km ...
         dist *= 0.001                                                           # [km]
