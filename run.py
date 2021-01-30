@@ -8,6 +8,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     try:
         import cartopy
         import cartopy.crs
+        import cartopy.io
         import cartopy.io.shapereader
     except:
         raise Exception("\"cartopy\" is not installed; run \"pip install --user Cartopy\"") from None
