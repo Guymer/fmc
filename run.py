@@ -42,13 +42,13 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
          -70.0, # right
           17.0, # bottom
           55.0  # top
-    ]
+    ]                                                                           # [°], [°], [°], [°]
     extr = [
          -10.0, # left
           40.0, # right
           33.0, # bottom
           71.0  # top
-    ]
+    ]                                                                           # [°], [°], [°], [°]
 
     # Set the half-width of the bars on the histogram ...
     hw = 0.2
@@ -146,7 +146,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     for xloc in range(int(round(extl[0])), int(round(extl[1])) + 1):
         if xloc % 10 != 0:
             continue
-        xlocs, ylocs = calc_vertical_gridlines(xloc, extl)
+        xlocs, ylocs = calc_vertical_gridlines(xloc, extl)                      # [°], [°]
         axl.plot(
             xlocs,
             ylocs,
@@ -158,7 +158,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     for yloc in range(int(round(extl[2])), int(round(extl[3])) + 1):
         if yloc % 10 != 0:
             continue
-        xlocs, ylocs = calc_horizontal_gridlines(yloc, extl)
+        xlocs, ylocs = calc_horizontal_gridlines(yloc, extl)                    # [°], [°]
         axl.plot(
             xlocs,
             ylocs,
@@ -172,7 +172,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     for xloc in range(int(round(extr[0])), int(round(extr[1])) + 1):
         if xloc % 10 != 0:
             continue
-        xlocs, ylocs = calc_vertical_gridlines(xloc, extr)
+        xlocs, ylocs = calc_vertical_gridlines(xloc, extr)                      # [°], [°]
         axr.plot(
             xlocs,
             ylocs,
@@ -184,7 +184,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     for yloc in range(int(round(extr[2])), int(round(extr[3])) + 1):
         if yloc % 10 != 0:
             continue
-        xlocs, ylocs = calc_horizontal_gridlines(yloc, extr)
+        xlocs, ylocs = calc_horizontal_gridlines(yloc, extr)                    # [°], [°]
         axr.plot(
             xlocs,
             ylocs,

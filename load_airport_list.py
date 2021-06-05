@@ -40,25 +40,25 @@ def load_airport_list():
 
             # Try loading numeric parameter ...
             try:
-                tmp["Latitude"] = float(row[6])
+                tmp["Latitude"] = float(row[6])                                 # [°]
             except ValueError:
                 pass
 
             # Try loading numeric parameter ...
             try:
-                tmp["Longitude"] = float(row[7])
+                tmp["Longitude"] = float(row[7])                                # [°]
             except ValueError:
                 pass
 
             # Try loading numeric parameter ...
             try:
-                tmp["Altitude"] = float(row[8])
+                tmp["Altitude"] = float(row[8])                                 # [ft]
             except ValueError:
                 pass
 
             # Try loading numeric parameter ...
             try:
-                tmp["UTC-offset"] = float(row[9])
+                tmp["UTC-offset"] = float(row[9])                               # [hr]
             except ValueError:
                 pass
 
