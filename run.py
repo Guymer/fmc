@@ -91,9 +91,9 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     axt.set_global()
     axl.set_extent(extl)
     axr.set_extent(extr)
-    pyguymer3.add_map_background(axt, resolution = "large4096px")
-    pyguymer3.add_map_background(axl, resolution = "large4096px")
-    pyguymer3.add_map_background(axr, resolution = "large4096px")
+    pyguymer3.geo.add_map_background(axt, resolution = "large4096px")
+    pyguymer3.geo.add_map_background(axl, resolution = "large4096px")
+    pyguymer3.geo.add_map_background(axr, resolution = "large4096px")
     axt.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
     axl.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
     axr.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
@@ -230,7 +230,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
         # Find coordinates for this flight ...
         lon1, lat1 = coordinates_of_IATA(db, iata1)                             # [°], [°]
         lon2, lat2 = coordinates_of_IATA(db, iata2)                             # [°], [°]
-        dist, alpha1, alpha2 = pyguymer3.calc_dist_between_two_locs(lon1, lat1, lon2, lat2) # [m], [°], [°]
+        dist, alpha1, alpha2 = pyguymer3.geo.calc_dist_between_two_locs(lon1, lat1, lon2, lat2) # [m], [°], [°]
 
         # Convert m to km ...
         dist *= 0.001                                                           # [km]
