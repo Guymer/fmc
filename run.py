@@ -295,10 +295,10 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
 
     # Add annotation ...
     label = (
-        "You have flown {:,d} km. "
-        "You have flown around the Earth {:.1f} times. "
-        "You have flown to the Moon {:.1f} times."
-    ).format(int(total_dist), total_dist / (2.0 * math.pi * 6371.009), total_dist / 384402.0)
+        "You have flown {:,.1f} km. "
+        "You have flown around the Earth {:,.1f} times. "
+        "You have flown to the Moon {:,.1f} times."
+    ).format(total_dist, total_dist / (2.0 * math.pi * 6371.0088), total_dist / 384402.0)
     axt.text(
         0.5,
         -0.02,
