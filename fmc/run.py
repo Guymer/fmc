@@ -2,7 +2,6 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     # Import standard modules ...
     import csv
     import datetime
-    import math
 
     # Import special modules ...
     try:
@@ -295,11 +294,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     axb.yaxis.grid(True)
 
     # Add annotation ...
-    label = (
-        "You have flown {:,.1f} km. "
-        "You have flown around the Earth {:,.1f} times. "
-        "You have flown to the Moon {:,.1f} times."
-    ).format(total_dist, total_dist / (2.0 * math.pi * 6371.0088), total_dist / 384402.0)
+    label = f"You have flown {total_dist:,.1f} km. You have flown around the Earth {total_dist / 40030.2:,.1f} times. You have flown to the Moon {total_dist / 384402.0:,.1f} times."
     axt.text(
         0.5,
         -0.02,
@@ -392,8 +387,8 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
 
     # Print out the countries that were not drawn ...
     for country in sorted(extraCountries):
-        print("\"{:s}\" was not drawn.".format(country))
+        print(f"\"{country}\" was not drawn.")
 
     # Print out the countries that have been visited ...
     for country in sorted(visited):
-        print("\"{:s}\" has been visited.".format(country))
+        print(f"\"{country}\" has been visited.")

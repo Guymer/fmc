@@ -7,7 +7,7 @@ def load_airport_list():
     airports = []
 
     # Make database path ...
-    dbpath = os.path.join(os.path.dirname(__file__), "openflights", "data", "airports.dat")
+    dbpath = f"{os.path.dirname(__file__)}/../openflights/data/airports.dat"
 
     # Check that database is there ...
     if not os.path.exists(dbpath):
