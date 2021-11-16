@@ -335,21 +335,21 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
             # NOTE: Removing them from the list enables us to print out the ones
             #       that where not found later on.
             axt.add_geometries(
-                record.geometry,
+                pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (1.0, 0.0, 0.0, 0.25),
                 facecolor = (1.0, 0.0, 0.0, 0.25),
                 linewidth = 0.5
             )
             axl.add_geometries(
-                record.geometry,
+                pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (1.0, 0.0, 0.0, 0.25),
                 facecolor = (1.0, 0.0, 0.0, 0.25),
                 linewidth = 0.5
             )
             axr.add_geometries(
-                record.geometry,
+                pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (1.0, 0.0, 0.0, 0.25),
                 facecolor = (1.0, 0.0, 0.0, 0.25),
@@ -359,21 +359,21 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
         else:
             # Outline the country ...
             axt.add_geometries(
-                record.geometry,
+                pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
                 facecolor = (0.0, 0.0, 0.0, 0.0 ),
                 linewidth = 0.5
             )
             axl.add_geometries(
-                record.geometry,
+                pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
                 facecolor = (0.0, 0.0, 0.0, 0.0 ),
                 linewidth = 0.5
             )
             axr.add_geometries(
-                record.geometry,
+                pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
                 facecolor = (0.0, 0.0, 0.0, 0.0 ),
