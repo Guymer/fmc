@@ -206,84 +206,87 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     pleasureY = []                                                              # [1000 km]
     total_dist = 0.0                                                            # [km]
 
-    # Loop over all flights ...
-    for row in csv.reader(open(flightLog, "rt")):
-        # Extract IATA codes for this flight ...
-        iata1 = row[0]
-        iata2 = row[1]
+    # Open flight log ...
+    with open(flightLog, "rt", encoding = "utf-8") as fobj:
+        # Loop over all flights ...
+        for row in csv.reader(fobj):
+            # Extract IATA codes for this flight ...
+            iata1 = row[0]
+            iata2 = row[1]
 
-        # Skip this flight if the codes are not what I expect ...
-        if len(iata1) != 3 or len(iata2) != 3:
-            continue
+            # Skip this flight if the codes are not what I expect ...
+            if len(iata1) != 3 or len(iata2) != 3:
+                continue
 
-        # Check if this is the first line ...
-        if businessX == []:
-            # Loop over the full range of years ...
-            for year in range(int(row[2][0:4]), int(datetime.date.today().strftime("%Y")) + 1):
-                # NOTE: This is a bit of a hack, I should really use NumPy but I
-                #       do not want to bring in another dependency that people
-                #       may not have.
-                businessX.append(year - hw)
-                businessY.append(0.0)                                           # [1000 km]
-                pleasureX.append(year + hw)
-                pleasureY.append(0.0)                                           # [1000 km]
+            # Check if this is the first line ...
+            if businessX == []:
+                # Loop over the full range of years ...
+                for year in range(int(row[2][0:4]), int(datetime.date.today().strftime("%Y")) + 1):
+                    # NOTE: This is a bit of a hack, I should really use NumPy
+                    #       but I do not want to bring in another dependency
+                    #       that people may not have.
+                    businessX.append(year - hw)
+                    businessY.append(0.0)                                       # [1000 km]
+                    pleasureX.append(year + hw)
+                    pleasureY.append(0.0)                                       # [1000 km]
 
-        # Find coordinates for this flight ...
-        lon1, lat1 = coordinates_of_IATA(db, iata1)                             # [°], [°]
-        lon2, lat2 = coordinates_of_IATA(db, iata2)                             # [°], [°]
-        dist, alpha1, alpha2 = pyguymer3.geo.calc_dist_between_two_locs(lon1, lat1, lon2, lat2) # [m], [°], [°]
+            # Find coordinates for this flight ...
+            lon1, lat1 = coordinates_of_IATA(db, iata1)                         # [°], [°]
+            lon2, lat2 = coordinates_of_IATA(db, iata2)                         # [°], [°]
+            dist, alpha1, alpha2 = pyguymer3.geo.calc_dist_between_two_locs(lon1, lat1, lon2, lat2) # [m], [°], [°]
 
-        # Convert m to km ...
-        dist *= 0.001                                                           # [km]
+            # Convert m to km ...
+            dist *= 0.001                                                       # [km]
 
-        # Add it's distance to the total ...
-        total_dist += dist                                                      # [km]
+            # Add it's distance to the total ...
+            total_dist += dist                                                  # [km]
 
-        # Add it's distance to the histogram ...
-        if row[3].lower() == "business":
-            businessY[businessX.index(int(row[2][0:4]) - hw)] += 0.001 * dist   # [1000 km]
-        elif row[3].lower() == "pleasure":
-            pleasureY[pleasureX.index(int(row[2][0:4]) + hw)] += 0.001 * dist   # [1000 km]
+            # Add it's distance to the histogram ...
+            if row[3].lower() == "business":
+                businessY[businessX.index(int(row[2][0:4]) - hw)] += 0.001 * dist   # [1000 km]
+            elif row[3].lower() == "pleasure":
+                pleasureY[pleasureX.index(int(row[2][0:4]) + hw)] += 0.001 * dist   # [1000 km]
 
-        # Create flight name and skip this flight if it has already been drawn ...
-        if iata1 < iata2:
-            flight = iata1 + "-" + iata2
-        else:
-            flight = iata2 + "-" + iata1
-        if flight in flights:
-            continue
-        flights[flight] = True
+            # Create flight name and skip this flight if it has already been
+            # drawn ...
+            if iata1 < iata2:
+                flight = iata1 + "-" + iata2
+            else:
+                flight = iata2 + "-" + iata1
+            if flight in flights:
+                continue
+            flights[flight] = True
 
-        # Draw the great circle ...
-        axt.plot(
-            [lon1, lon2],
-            [lat1, lat2],
-            transform = cartopy.crs.Geodetic(),
-            linewidth = 1.0,
-                color = "red"
-        )
-        axl.plot(
-            [lon1, lon2],
-            [lat1, lat2],
-            transform = cartopy.crs.Geodetic(),
-            linewidth = 1.0,
-                color = "red"
-        )
-        axr.plot(
-            [lon1, lon2],
-            [lat1, lat2],
-            transform = cartopy.crs.Geodetic(),
-            linewidth = 1.0,
-                color = "red"
-        )
+            # Draw the great circle ...
+            axt.plot(
+                [lon1, lon2],
+                [lat1, lat2],
+                transform = cartopy.crs.Geodetic(),
+                linewidth = 1.0,
+                    color = "red"
+            )
+            axl.plot(
+                [lon1, lon2],
+                [lat1, lat2],
+                transform = cartopy.crs.Geodetic(),
+                linewidth = 1.0,
+                    color = "red"
+            )
+            axr.plot(
+                [lon1, lon2],
+                [lat1, lat2],
+                transform = cartopy.crs.Geodetic(),
+                linewidth = 1.0,
+                    color = "red"
+            )
 
-        # Find countries and add them to the list if either are missing ...
-        country1 = country_of_IATA(db, iata1)
-        country2 = country_of_IATA(db, iata2)
-        if country1 not in extraCountries:
-            extraCountries.append(country1)
-        if country2 not in extraCountries:
-            extraCountries.append(country2)
+            # Find countries and add them to the list if either are missing ...
+            country1 = country_of_IATA(db, iata1)
+            country2 = country_of_IATA(db, iata2)
+            if country1 not in extraCountries:
+                extraCountries.append(country1)
+            if country2 not in extraCountries:
+                extraCountries.append(country2)
 
     # Plot histograms ...
     axb.bar(businessX, businessY, width = 2.0 * hw, label = "Business")
