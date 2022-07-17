@@ -55,7 +55,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     hw = 0.2
 
     # Create plot and make it pretty ...
-    fig = matplotlib.pyplot.figure(figsize = (8, 12), dpi = 300)
+    fg = matplotlib.pyplot.figure(figsize = (8, 12), dpi = 300)
     axt = matplotlib.pyplot.subplot2grid(
         (29, 20),
         ( 0,  0),
@@ -384,9 +384,9 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
             )
 
     # Save map as PNG ...
-    fig.savefig(flightLog.replace(".csv", ".png"), bbox_inches = "tight", dpi = 300, pad_inches = 0.1)
+    fg.savefig(flightLog.replace(".csv", ".png"), bbox_inches = "tight", dpi = 300, pad_inches = 0.1)
+    matplotlib.pyplot.close(fg)
     pyguymer3.image.optimize_image(flightLog.replace(".csv", ".png"), strip = True)
-    matplotlib.pyplot.close(fig)
 
     # Print out the countries that were not drawn ...
     for country in sorted(extraCountries):
