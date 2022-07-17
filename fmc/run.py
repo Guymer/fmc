@@ -1,7 +1,6 @@
 def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited = [], renames = {}):
     # Import standard modules ...
     import csv
-    import datetime
 
     # Import special modules ...
     try:
@@ -42,13 +41,13 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
         -120.0, # left
          -70.0, # right
           17.0, # bottom
-          55.0  # top
+          55.0, # top
     ]                                                                           # [°], [°], [°], [°]
     extr = [
          -10.0, # left
           40.0, # right
           33.0, # bottom
-          71.0  # top
+          71.0, # top
     ]                                                                           # [°], [°], [°], [°]
 
     # Set the half-width of the bars on the histogram ...
@@ -56,39 +55,11 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
 
     # Create plot and make it pretty ...
     fg = matplotlib.pyplot.figure(figsize = (8, 12), dpi = 300)
-    axt = matplotlib.pyplot.subplot2grid(
-        (29, 20),
-        ( 0,  0),
-        projection = cartopy.crs.Robinson(),
-           colspan = 20,
-           rowspan = 10
-    )
-    axl = matplotlib.pyplot.subplot2grid(
-        (29, 20),
-        (10,  0),
-        projection = cartopy.crs.Orthographic(
-            central_longitude = 0.5 * (extl[0] + extl[1]),
-             central_latitude = 0.5 * (extl[2] + extl[3])
-        ),
-        colspan = 10,
-        rowspan =  9
-    )
-    axr = matplotlib.pyplot.subplot2grid(
-        (29, 20),
-        (10, 10),
-        projection = cartopy.crs.Orthographic(
-            central_longitude = 0.5 * (extr[0] + extr[1]),
-             central_latitude = 0.5 * (extr[2] + extr[3])
-        ),
-        colspan = 10,
-        rowspan =  9
-    )
-    axb = matplotlib.pyplot.subplot2grid(
-        (29, 20),
-        (19,  0),
-        colspan = 20,
-        rowspan = 10
-    )
+    gs = fg.add_gridspec(29, 20)
+    axt = fg.add_subplot(gs[ 0:10,  0:20], projection = cartopy.crs.Robinson())
+    axl = fg.add_subplot(gs[10:19,  0:10], projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extl[0] + extl[1]), central_latitude = 0.5 * (extl[2] + extl[3])))
+    axr = fg.add_subplot(gs[10:19, 10:20], projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extr[0] + extr[1]), central_latitude = 0.5 * (extr[2] + extr[3])))
+    axb = fg.add_subplot(gs[19:29,  0:20])
     axt.set_global()
     axl.set_extent(extl)
     axr.set_extent(extr)
@@ -108,7 +79,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
         transform = cartopy.crs.PlateCarree(),
             color = "black",
         linewidth = 0.5,
-        linestyle = ":"
+        linestyle = ":",
     )
     axt.plot(
         [-180.0, 180.0],
@@ -116,7 +87,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
         transform = cartopy.crs.PlateCarree(),
             color = "black",
         linewidth = 0.5,
-        linestyle = ":"
+        linestyle = ":",
     )
     axt.plot(
         [-180.0, 180.0],
@@ -124,7 +95,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
         transform = cartopy.crs.PlateCarree(),
             color = "black",
         linewidth = 0.5,
-        linestyle = ":"
+        linestyle = ":",
     )
     axt.plot(
         [-180.0, 180.0],
@@ -132,7 +103,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
         transform = cartopy.crs.PlateCarree(),
             color = "black",
         linewidth = 0.5,
-        linestyle = ":"
+        linestyle = ":",
     )
     axt.plot(
         [-180.0, 180.0],
@@ -140,7 +111,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
         transform = cartopy.crs.PlateCarree(),
             color = "black",
         linewidth = 0.5,
-        linestyle = ":"
+        linestyle = ":",
     )
 
     # Add notable lines manually (left) ...
@@ -154,7 +125,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
             transform = cartopy.crs.PlateCarree(),
                 color = "black",
             linewidth = 0.5,
-            linestyle = ":"
+            linestyle = ":",
         )
     for yloc in range(int(round(extl[2])), int(round(extl[3])) + 1):
         if yloc % 10 != 0:
@@ -166,7 +137,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
             transform = cartopy.crs.PlateCarree(),
                 color = "black",
             linewidth = 0.5,
-            linestyle = ":"
+            linestyle = ":",
         )
 
     # Add notable lines manually (right) ...
@@ -180,7 +151,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
             transform = cartopy.crs.PlateCarree(),
                 color = "black",
             linewidth = 0.5,
-            linestyle = ":"
+            linestyle = ":",
         )
     for yloc in range(int(round(extr[2])), int(round(extr[3])) + 1):
         if yloc % 10 != 0:
@@ -192,7 +163,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
             transform = cartopy.crs.PlateCarree(),
                 color = "black",
             linewidth = 0.5,
-            linestyle = ":"
+            linestyle = ":",
         )
 
     # Load airport list ...
@@ -204,6 +175,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     businessY = []                                                              # [1000 km]
     pleasureX = []
     pleasureY = []                                                              # [1000 km]
+    minYear = 0
     total_dist = 0.0                                                            # [km]
 
     # Open flight log ...
@@ -219,9 +191,12 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
                 continue
 
             # Check if this is the first line ...
-            if businessX == []:
+            if len(businessX) == 0:
+                # Set the minimum year ...
+                minYear = int(row[2][0:4])
+
                 # Loop over the full range of years ...
-                for year in range(int(row[2][0:4]), int(datetime.date.today().strftime("%Y")) + 1):
+                for year in range(minYear, pyguymer3.now().year + 1):
                     # NOTE: This is a bit of a hack, I should really use NumPy
                     #       but I do not want to bring in another dependency
                     #       that people may not have.
@@ -263,21 +238,21 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
                 [lat1, lat2],
                 transform = cartopy.crs.Geodetic(),
                 linewidth = 1.0,
-                    color = "red"
+                    color = "red",
             )
             axl.plot(
                 [lon1, lon2],
                 [lat1, lat2],
                 transform = cartopy.crs.Geodetic(),
                 linewidth = 1.0,
-                    color = "red"
+                    color = "red",
             )
             axr.plot(
                 [lon1, lon2],
                 [lat1, lat2],
                 transform = cartopy.crs.Geodetic(),
                 linewidth = 1.0,
-                    color = "red"
+                    color = "red",
             )
 
             # Find countries and add them to the list if either are missing ...
@@ -291,10 +266,10 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     # Plot histograms ...
     axb.bar(businessX, businessY, width = 2.0 * hw, label = "Business")
     axb.bar(pleasureX, pleasureY, width = 2.0 * hw, label = "Pleasure")
+    axb.grid()
     axb.legend()
+    axb.set_xticks(range(minYear, pyguymer3.now().year + 1))
     axb.set_ylabel("Distance [1000 km/year]")
-    axb.xaxis.grid(True)
-    axb.yaxis.grid(True)
 
     # Add annotation ...
     label = f"You have flown {total_dist:,.1f} km. You have flown around the Earth {total_dist / 40030.2:,.1f} times. You have flown to the Moon {total_dist / 384402.0:,.1f} times."
@@ -305,7 +280,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
         horizontalalignment = "center",
           verticalalignment = "center",
                   transform = axt.transAxes,
-                   fontsize = 6
+                   fontsize = 6,
     )
 
     # Clean up the list ...
@@ -321,7 +296,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     shape_file = cartopy.io.shapereader.natural_earth(
         resolution = "10m",
           category = "cultural",
-              name = "admin_0_countries"
+              name = "admin_0_countries",
     )
 
     # Initialize visited list ...
@@ -329,10 +304,13 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
 
     # Loop over records ...
     for record in cartopy.io.shapereader.Reader(shape_file).records():
+        # Create short-hand ...
+        country = record.attributes["NAME"].replace("\0", "").strip()
+
         # Check if this country is in the list ...
-        if record.attributes["NAME"] in extraCountries and record.attributes["NAME"] not in notVisited:
+        if country in extraCountries and country not in notVisited:
             # Append country name to visited list ...
-            visited.append(record.attributes["NAME"])
+            visited.append(country)
 
             # Fill the country in and remove it from the list ...
             # NOTE: Removing them from the list enables us to print out the ones
@@ -342,23 +320,23 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
                 cartopy.crs.PlateCarree(),
                 edgecolor = (1.0, 0.0, 0.0, 0.25),
                 facecolor = (1.0, 0.0, 0.0, 0.25),
-                linewidth = 0.5
+                linewidth = 0.5,
             )
             axl.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (1.0, 0.0, 0.0, 0.25),
                 facecolor = (1.0, 0.0, 0.0, 0.25),
-                linewidth = 0.5
+                linewidth = 0.5,
             )
             axr.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (1.0, 0.0, 0.0, 0.25),
                 facecolor = (1.0, 0.0, 0.0, 0.25),
-                linewidth = 0.5
+                linewidth = 0.5,
             )
-            extraCountries.remove(record.attributes["NAME"])
+            extraCountries.remove(country)
         else:
             # Outline the country ...
             axt.add_geometries(
@@ -366,21 +344,21 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
                 facecolor = (0.0, 0.0, 0.0, 0.0 ),
-                linewidth = 0.5
+                linewidth = 0.5,
             )
             axl.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
                 facecolor = (0.0, 0.0, 0.0, 0.0 ),
-                linewidth = 0.5
+                linewidth = 0.5,
             )
             axr.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
                 facecolor = (0.0, 0.0, 0.0, 0.0 ),
-                linewidth = 0.5
+                linewidth = 0.5,
             )
 
     # Save map as PNG ...
