@@ -27,8 +27,6 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
         raise Exception("\"pyguymer3\" is not installed; you need to have the Python module from https://github.com/Guymer/PyGuymer3 located somewhere in your $PYTHONPATH") from None
 
     # Import sub-functions ...
-    from .calc_horizontal_gridlines import calc_horizontal_gridlines
-    from .calc_vertical_gridlines import calc_vertical_gridlines
     from .coordinates_of_IATA import coordinates_of_IATA
     from .country_of_IATA import country_of_IATA
     from .load_airport_list import load_airport_list
@@ -36,7 +34,13 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     # Configure matplotlib ...
     matplotlib.pyplot.rcParams.update({"font.size" : 8})
 
-    # Set extents of the two sub-plots ...
+    # Set extents of the three sub-plots ...
+    extt = [
+        -180.0, # left
+         180.0, # right
+         -90.0, # bottom
+          90.0, # top
+    ]                                                                           # [°], [°], [°], [°]
     extl = [
         -120.0, # left
          -70.0, # right
@@ -73,98 +77,15 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     # Add notable lines of latitude manually (top) ...
     y1 = 66.0 + 33.0 / 60.0 + 46.2 / 3600.0                                     # [°]
     y2 = 23.0 + 26.0 / 60.0 + 13.8 / 3600.0                                     # [°]
-    axt.plot(
-        [-180.0, 180.0],
-        [ y1,  y1],
-        transform = cartopy.crs.PlateCarree(),
-            color = "black",
-        linewidth = 0.5,
-        linestyle = ":",
-    )
-    axt.plot(
-        [-180.0, 180.0],
-        [ y2,  y2],
-        transform = cartopy.crs.PlateCarree(),
-            color = "black",
-        linewidth = 0.5,
-        linestyle = ":",
-    )
-    axt.plot(
-        [-180.0, 180.0],
-        [0.0, 0.0],
-        transform = cartopy.crs.PlateCarree(),
-            color = "black",
-        linewidth = 0.5,
-        linestyle = ":",
-    )
-    axt.plot(
-        [-180.0, 180.0],
-        [-y2, -y2],
-        transform = cartopy.crs.PlateCarree(),
-            color = "black",
-        linewidth = 0.5,
-        linestyle = ":",
-    )
-    axt.plot(
-        [-180.0, 180.0],
-        [-y1, -y1],
-        transform = cartopy.crs.PlateCarree(),
-            color = "black",
-        linewidth = 0.5,
-        linestyle = ":",
-    )
+    pyguymer3.geo.add_horizontal_gridlines(axt, extt, locs = [-y2, -y1, 0.0, +y1, +y2])
 
-    # Add notable lines manually (left) ...
-    for xloc in range(int(round(extl[0])), int(round(extl[1])) + 1):
-        if xloc % 10 != 0:
-            continue
-        xlocs, ylocs = calc_vertical_gridlines(xloc, extl)                      # [°], [°]
-        axl.plot(
-            xlocs,
-            ylocs,
-            transform = cartopy.crs.PlateCarree(),
-                color = "black",
-            linewidth = 0.5,
-            linestyle = ":",
-        )
-    for yloc in range(int(round(extl[2])), int(round(extl[3])) + 1):
-        if yloc % 10 != 0:
-            continue
-        xlocs, ylocs = calc_horizontal_gridlines(yloc, extl)                    # [°], [°]
-        axl.plot(
-            xlocs,
-            ylocs,
-            transform = cartopy.crs.PlateCarree(),
-                color = "black",
-            linewidth = 0.5,
-            linestyle = ":",
-        )
+    # Add notable lines of longitude and latitude manually (left) ...
+    pyguymer3.geo.add_horizontal_gridlines(axl, extt, locs = range(-90, +100, 10))
+    pyguymer3.geo.add_vertical_gridlines(axl, extt, locs = range(-180, +190, 10))
 
-    # Add notable lines manually (right) ...
-    for xloc in range(int(round(extr[0])), int(round(extr[1])) + 1):
-        if xloc % 10 != 0:
-            continue
-        xlocs, ylocs = calc_vertical_gridlines(xloc, extr)                      # [°], [°]
-        axr.plot(
-            xlocs,
-            ylocs,
-            transform = cartopy.crs.PlateCarree(),
-                color = "black",
-            linewidth = 0.5,
-            linestyle = ":",
-        )
-    for yloc in range(int(round(extr[2])), int(round(extr[3])) + 1):
-        if yloc % 10 != 0:
-            continue
-        xlocs, ylocs = calc_horizontal_gridlines(yloc, extr)                    # [°], [°]
-        axr.plot(
-            xlocs,
-            ylocs,
-            transform = cartopy.crs.PlateCarree(),
-                color = "black",
-            linewidth = 0.5,
-            linestyle = ":",
-        )
+    # Add notable lines of longitude and latitude manually (right) ...
+    pyguymer3.geo.add_horizontal_gridlines(axr, extt, locs = range(-90, +100, 10))
+    pyguymer3.geo.add_vertical_gridlines(axr, extt, locs = range(-180, +190, 10))
 
     # Load airport list ...
     db = load_airport_list()
