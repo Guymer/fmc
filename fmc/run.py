@@ -129,7 +129,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
             # Find coordinates for this flight ...
             lon1, lat1 = coordinates_of_IATA(db, iata1)                         # [°], [°]
             lon2, lat2 = coordinates_of_IATA(db, iata2)                         # [°], [°]
-            dist, alpha1, alpha2 = pyguymer3.geo.calc_dist_between_two_locs(lon1, lat1, lon2, lat2) # [m], [°], [°]
+            dist, _, _ = pyguymer3.geo.calc_dist_between_two_locs(lon1, lat1, lon2, lat2)   # [m], [°], [°]
 
             # Convert m to km ...
             dist *= 0.001                                                       # [km]
@@ -225,13 +225,29 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
 
     # Loop over records ...
     for record in cartopy.io.shapereader.Reader(shape_file).records():
-        # Create short-hand ...
-        country = record.attributes["NAME"].replace("\0", "").strip()
+        # Create short-hands ...
+        # NOTE: According to the developer of Natural Earth:
+        #           "Because Natural Earth has a more fidelity than ISO, and
+        #           tracks countries that ISO doesn't, Natural Earth maintains
+        #           it's own set of 3-character codes for each admin-0 related
+        #           feature."
+        #       Therefore, when "ISO_A2" or "ISO_A3" are not populated I must
+        #       fall back on "ISO_A2_EH" and "ISO_A3_EH" instead, see:
+        #         * https://github.com/nvkelso/natural-earth-vector/issues/268
+        neA2 = record.attributes["ISO_A2"].replace("\x00", " ").strip()
+        neA3 = record.attributes["ISO_A3"].replace("\x00", " ").strip()
+        neCountry = record.attributes["NAME"].replace("\x00", " ").strip()
+        if neA2 == "-99":
+            print(f"INFO: Falling back on \"ISO_A2_EH\" for \"{neCountry}\".")
+            neA2 = record.attributes["ISO_A2_EH"].replace("\x00", " ").strip()
+        if neA3 == "-99":
+            print(f"INFO: Falling back on \"ISO_A3_EH\" for \"{neCountry}\".")
+            neA3 = record.attributes["ISO_A3_EH"].replace("\x00", " ").strip()
 
         # Check if this country is in the list ...
-        if country in extraCountries and country not in notVisited:
+        if neCountry in extraCountries and neCountry not in notVisited:
             # Append country name to visited list ...
-            visited.append(country)
+            visited.append(neCountry)
 
             # Fill the country in and remove it from the list ...
             # NOTE: Removing them from the list enables us to print out the ones
@@ -257,7 +273,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
                 facecolor = (1.0, 0.0, 0.0, 0.25),
                 linewidth = 0.5,
             )
-            extraCountries.remove(country)
+            extraCountries.remove(neCountry)
         else:
             # Outline the country ...
             axt.add_geometries(
@@ -282,10 +298,22 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
                 linewidth = 0.5,
             )
 
-    # Save map as PNG ...
-    fg.savefig(flightLog.replace(".csv", ".png"), bbox_inches = "tight", dpi = 300, pad_inches = 0.1)
+    # Configure figure ...
+    fg.tight_layout()
+
+    # Save figure ...
+    fg.savefig(
+        flightLog.replace(".csv", ".png"),
+               dpi = 300,
+        pad_inches = 0.1,
+    )
     matplotlib.pyplot.close(fg)
-    pyguymer3.image.optimize_image(flightLog.replace(".csv", ".png"), strip = True)
+
+    # Optimize PNG ...
+    pyguymer3.image.optimize_image(
+        flightLog.replace(".csv", ".png"),
+        strip = True,
+    )
 
     # Print out the countries that were not drawn ...
     for country in sorted(extraCountries):
