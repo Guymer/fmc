@@ -80,12 +80,12 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     pyguymer3.geo.add_horizontal_gridlines(axt, extt, locs = [-y2, -y1, 0.0, +y1, +y2])
 
     # Add notable lines of longitude and latitude manually (left) ...
-    pyguymer3.geo.add_horizontal_gridlines(axl, extt, locs = range(-90, +100, 10))
-    pyguymer3.geo.add_vertical_gridlines(axl, extt, locs = range(-180, +190, 10))
+    pyguymer3.geo.add_horizontal_gridlines(axl, extl, locs = range(-90, +100, 10))
+    pyguymer3.geo.add_vertical_gridlines(axl, extl, locs = range(-180, +190, 10))
 
     # Add notable lines of longitude and latitude manually (right) ...
-    pyguymer3.geo.add_horizontal_gridlines(axr, extt, locs = range(-90, +100, 10))
-    pyguymer3.geo.add_vertical_gridlines(axr, extt, locs = range(-180, +190, 10))
+    pyguymer3.geo.add_horizontal_gridlines(axr, extr, locs = range(-90, +100, 10))
+    pyguymer3.geo.add_vertical_gridlines(axr, extr, locs = range(-180, +190, 10))
 
     # Load airport list ...
     db = load_airport_list()
