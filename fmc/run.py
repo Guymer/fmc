@@ -40,19 +40,19 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
          180.0, # right
          -90.0, # bottom
           90.0, # top
-    ]                                                                           # [°], [°], [°], [°]
+    ]                                                                           # [°]
     extl = [
         -120.0, # left
          -70.0, # right
           17.0, # bottom
           55.0, # top
-    ]                                                                           # [°], [°], [°], [°]
+    ]                                                                           # [°]
     extr = [
          -10.0, # left
           40.0, # right
           33.0, # bottom
           71.0, # top
-    ]                                                                           # [°], [°], [°], [°]
+    ]                                                                           # [°]
 
     # Set the half-width of the bars on the histogram ...
     hw = 0.2
@@ -129,7 +129,12 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
             # Find coordinates for this flight ...
             lon1, lat1 = coordinates_of_IATA(db, iata1)                         # [°], [°]
             lon2, lat2 = coordinates_of_IATA(db, iata2)                         # [°], [°]
-            dist, _, _ = pyguymer3.geo.calc_dist_between_two_locs(lon1, lat1, lon2, lat2)   # [m], [°], [°]
+            dist, _, _ = pyguymer3.geo.calc_dist_between_two_locs(
+                lon1,
+                lat1,
+                lon2,
+                lat2,
+            )                                                                   # [m]
 
             # Convert m to km ...
             dist *= 0.001                                                       # [km]
@@ -157,23 +162,23 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
             axt.plot(
                 [lon1, lon2],
                 [lat1, lat2],
-                transform = cartopy.crs.Geodetic(),
-                linewidth = 1.0,
                     color = "red",
+                linewidth = 1.0,
+                transform = cartopy.crs.Geodetic(),
             )
             axl.plot(
                 [lon1, lon2],
                 [lat1, lat2],
-                transform = cartopy.crs.Geodetic(),
-                linewidth = 1.0,
                     color = "red",
+                linewidth = 1.0,
+                transform = cartopy.crs.Geodetic(),
             )
             axr.plot(
                 [lon1, lon2],
                 [lat1, lat2],
-                transform = cartopy.crs.Geodetic(),
-                linewidth = 1.0,
                     color = "red",
+                linewidth = 1.0,
+                transform = cartopy.crs.Geodetic(),
             )
 
             # Find countries and add them to the list if either are missing ...
@@ -198,10 +203,10 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
         0.5,
         -0.02,
         label,
-        horizontalalignment = "center",
-          verticalalignment = "center",
-                  transform = axt.transAxes,
                    fontsize = 6,
+        horizontalalignment = "center",
+                  transform = axt.transAxes,
+          verticalalignment = "center",
     )
 
     # Clean up the list ...
@@ -214,40 +219,24 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
             extraCountries.append(country2)
 
     # Find file containing all the country shapes ...
-    shape_file = cartopy.io.shapereader.natural_earth(
-        resolution = "10m",
+    sfile = cartopy.io.shapereader.natural_earth(
           category = "cultural",
               name = "admin_0_countries",
+        resolution = "10m",
     )
 
     # Initialize visited list ...
     visited = []
 
     # Loop over records ...
-    for record in cartopy.io.shapereader.Reader(shape_file).records():
-        # Create short-hands ...
-        # NOTE: According to the developer of Natural Earth:
-        #           "Because Natural Earth has a more fidelity than ISO, and
-        #           tracks countries that ISO doesn't, Natural Earth maintains
-        #           it's own set of 3-character codes for each admin-0 related
-        #           feature."
-        #       Therefore, when "ISO_A2" or "ISO_A3" are not populated I must
-        #       fall back on "ISO_A2_EH" and "ISO_A3_EH" instead, see:
-        #         * https://github.com/nvkelso/natural-earth-vector/issues/268
-        neA2 = record.attributes["ISO_A2"].replace("\x00", " ").strip()
-        neA3 = record.attributes["ISO_A3"].replace("\x00", " ").strip()
-        neCountry = record.attributes["NAME"].replace("\x00", " ").strip()
-        if neA2 == "-99":
-            print(f"INFO: Falling back on \"ISO_A2_EH\" for \"{neCountry}\".")
-            neA2 = record.attributes["ISO_A2_EH"].replace("\x00", " ").strip()
-        if neA3 == "-99":
-            print(f"INFO: Falling back on \"ISO_A3_EH\" for \"{neCountry}\".")
-            neA3 = record.attributes["ISO_A3_EH"].replace("\x00", " ").strip()
+    for record in cartopy.io.shapereader.Reader(sfile).records():
+        # Create short-hand ...
+        neName = pyguymer3.geo.getRecordAttribute(record, "NAME")
 
         # Check if this country is in the list ...
-        if neCountry in extraCountries and neCountry not in notVisited:
+        if neName in extraCountries and neName not in notVisited:
             # Append country name to visited list ...
-            visited.append(neCountry)
+            visited.append(neName)
 
             # Fill the country in and remove it from the list ...
             # NOTE: Removing them from the list enables us to print out the ones
@@ -273,7 +262,7 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
                 facecolor = (1.0, 0.0, 0.0, 0.25),
                 linewidth = 0.5,
             )
-            extraCountries.remove(neCountry)
+            extraCountries.remove(neName)
         else:
             # Outline the country ...
             axt.add_geometries(
