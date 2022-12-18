@@ -1,4 +1,4 @@
-def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited = [], renames = {}):
+def run(kwArgCheck = None, extraCountries = [], flightLog = "/this/path/does/not/exist", notVisited = [], renames = {}):
     # Import standard modules ...
     import csv
 
@@ -30,6 +30,10 @@ def run(flightLog = "/this/path/does/not/exist", extraCountries = [], notVisited
     from .coordinates_of_IATA import coordinates_of_IATA
     from .country_of_IATA import country_of_IATA
     from .load_airport_list import load_airport_list
+
+    # Check keyword arguments ...
+    if kwArgCheck is not None:
+        print(f"WARNING: \"{__name__}\" has been called with an extra positional argument")
 
     # Configure matplotlib ...
     matplotlib.pyplot.rcParams.update({"font.size" : 8})
