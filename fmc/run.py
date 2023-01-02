@@ -15,6 +15,7 @@ def run(kwArgCheck = None, extraCountries = [], flightLog = "/this/path/does/not
         matplotlib.use("Agg")                                                   # NOTE: See https://matplotlib.org/stable/gallery/user_interfaces/canvasagg.html
         import matplotlib.image
         import matplotlib.pyplot
+        matplotlib.pyplot.rcParams.update({"font.size" : 8})
     except:
         raise Exception("\"matplotlib\" is not installed; run \"pip install --user matplotlib\"") from None
 
@@ -34,9 +35,6 @@ def run(kwArgCheck = None, extraCountries = [], flightLog = "/this/path/does/not
     # Check keyword arguments ...
     if kwArgCheck is not None:
         print(f"WARNING: \"{__name__}\" has been called with an extra positional argument")
-
-    # Configure matplotlib ...
-    matplotlib.pyplot.rcParams.update({"font.size" : 8})
 
     # Set extents of the three sub-plots ...
     extt = [
