@@ -102,9 +102,9 @@ def run(kwArgCheck = None, extraCountries = [], flightLog = "/this/path/does/not
     total_dist = 0.0                                                            # [km]
 
     # Open flight log ...
-    with open(flightLog, "rt", encoding = "utf-8") as fobj:
+    with open(flightLog, "rt", encoding = "utf-8") as fObj:
         # Loop over all flights ...
-        for row in csv.reader(fobj):
+        for row in csv.reader(fObj):
             # Extract IATA codes for this flight ...
             iata1 = row[0]
             iata2 = row[1]

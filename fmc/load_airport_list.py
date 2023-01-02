@@ -18,9 +18,9 @@ def load_airport_list():
         raise Exception("the airport database is missing") from None
 
     # Open database ...
-    with open(dbpath, "rt", encoding = "utf-8") as fobj:
+    with open(dbpath, "rt", encoding = "utf-8") as fObj:
         # Loop over all airports ...
-        for row in csv.reader(fobj):
+        for row in csv.reader(fObj):
             # Load string parameters ...
             tmp = {
                       "Name" : row[ 1],
