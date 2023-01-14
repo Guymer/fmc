@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+# Define function ...
 def country_of_IATA(airports, iata):
     # Loop over all airports ...
     for airport in airports:

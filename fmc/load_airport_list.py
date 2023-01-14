@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+# Define function ...
 def load_airport_list():
     # Import standard modules ...
     import csv

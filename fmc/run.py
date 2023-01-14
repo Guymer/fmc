@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+# Define function ...
 def run(kwArgCheck = None, extraCountries = None, flightLog = "/this/path/does/not/exist", notVisited = None, renames = None):
     # Import standard modules ...
     import csv
