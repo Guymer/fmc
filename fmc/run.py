@@ -1,4 +1,4 @@
-def run(kwArgCheck = None, extraCountries = [], flightLog = "/this/path/does/not/exist", notVisited = [], renames = {}):
+def run(kwArgCheck = None, extraCountries = None, flightLog = "/this/path/does/not/exist", notVisited = None, renames = None):
     # Import standard modules ...
     import csv
 
@@ -35,6 +35,16 @@ def run(kwArgCheck = None, extraCountries = [], flightLog = "/this/path/does/not
     # Check keyword arguments ...
     if kwArgCheck is not None:
         print(f"WARNING: \"{__name__}\" has been called with an extra positional argument")
+
+    # Populate default values ...
+    if extraCountries is None:
+        extraCountries = []
+    if notVisited is None:
+        notVisited = []
+    if renames is None:
+        renames = {}
+
+    # **************************************************************************
 
     # Set extents of the three sub-plots ...
     extt = [
