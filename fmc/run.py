@@ -15,10 +15,15 @@ def run(kwArgCheck = None, extraCountries = None, flightLog = "/this/path/does/n
         raise Exception("\"cartopy\" is not installed; run \"pip install --user Cartopy\"") from None
     try:
         import matplotlib
-        matplotlib.use("Agg")                                                   # NOTE: See https://matplotlib.org/stable/gallery/user_interfaces/canvasagg.html
+        matplotlib.rcParams.update(
+            {
+                   "backend" : "Agg",                                           # NOTE: See https://matplotlib.org/stable/gallery/user_interfaces/canvasagg.html
+                "figure.dpi" : 300,
+                 "font.size" : 8,
+            }
+        )
         import matplotlib.image
         import matplotlib.pyplot
-        matplotlib.pyplot.rcParams.update({"font.size" : 8})
     except:
         raise Exception("\"matplotlib\" is not installed; run \"pip install --user matplotlib\"") from None
 
@@ -72,21 +77,31 @@ def run(kwArgCheck = None, extraCountries = None, flightLog = "/this/path/does/n
     # Set the half-width of the bars on the histogram ...
     hw = 0.2
 
-    # Create plot and make it pretty ...
-    fg = matplotlib.pyplot.figure(figsize = (8, 12), dpi = 300)
+    # Create figure ...
+    fg = matplotlib.pyplot.figure(figsize = (8, 12))
+
+    # Create grid specification ...
     gs = fg.add_gridspec(29, 20)
+
+    # Create axes ...
     axt = fg.add_subplot(gs[ 0:10,  0:20], projection = cartopy.crs.Robinson())
     axl = fg.add_subplot(gs[10:19,  0:10], projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extl[0] + extl[1]), central_latitude = 0.5 * (extl[2] + extl[3])))
     axr = fg.add_subplot(gs[10:19, 10:20], projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extr[0] + extr[1]), central_latitude = 0.5 * (extr[2] + extr[3])))
     axb = fg.add_subplot(gs[19:29,  0:20])
+
+    # Configure axis (top) ...
     axt.set_global()
-    axl.set_extent(extl)
-    axr.set_extent(extr)
     pyguymer3.geo.add_map_background(axt, resolution = "large8192px")
-    pyguymer3.geo.add_map_background(axl, resolution = "large8192px")
-    pyguymer3.geo.add_map_background(axr, resolution = "large8192px")
     axt.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
+
+    # Configure axis (left) ...
+    axl.set_extent(extl)
+    pyguymer3.geo.add_map_background(axl, resolution = "large8192px")
     axl.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
+
+    # Configure axis (right) ...
+    axr.set_extent(extr)
+    pyguymer3.geo.add_map_background(axr, resolution = "large8192px")
     axr.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
 
     # Add notable lines of latitude manually (top) ...
@@ -306,11 +321,7 @@ def run(kwArgCheck = None, extraCountries = None, flightLog = "/this/path/does/n
     fg.tight_layout()
 
     # Save figure ...
-    fg.savefig(
-        flightLog.replace(".csv", ".png"),
-               dpi = 300,
-        pad_inches = 0.1,
-    )
+    fg.savefig(flightLog.replace(".csv", ".png"))
     matplotlib.pyplot.close(fg)
 
     # Optimize PNG ...
