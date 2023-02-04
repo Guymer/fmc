@@ -14,7 +14,7 @@ import fmc
 
 # Run function ...
 fmc.run(
-    flightLog = "example.csv",
+    "example.csv",
     extraCountries = [
         "Denmark",
         "Germany",
