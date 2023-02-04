@@ -8,7 +8,7 @@ if __name__ == "__main__":
 
     # Run function ...
     fmc.run(
-        flightLog = "example.csv",
+        "example.csv",
         extraCountries = [
             "Denmark",
             "Germany",
