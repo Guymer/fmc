@@ -50,26 +50,6 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
 
     # **************************************************************************
 
-    # Set extents of the three sub-plots ...
-    extt = [
-        -180.0, # left
-         180.0, # right
-         -90.0, # bottom
-          90.0, # top
-    ]                                                                           # [°]
-    extl = [
-        -120.0, # left
-         -70.0, # right
-          17.0, # bottom
-          55.0, # top
-    ]                                                                           # [°]
-    extr = [
-         -10.0, # left
-          40.0, # right
-          33.0, # bottom
-          71.0, # top
-    ]                                                                           # [°]
-
     # Set the half-width of the bars on the histogram ...
     hw = 0.2
 
@@ -80,38 +60,68 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
     gs = fg.add_gridspec(29, 20)
 
     # Create axes ...
-    axt = fg.add_subplot(gs[ 0:10,  0:20], projection = cartopy.crs.Robinson())
-    axl = fg.add_subplot(gs[10:19,  0:10], projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extl[0] + extl[1]), central_latitude = 0.5 * (extl[2] + extl[3])))
-    axr = fg.add_subplot(gs[10:19, 10:20], projection = cartopy.crs.Orthographic(central_longitude = 0.5 * (extr[0] + extr[1]), central_latitude = 0.5 * (extr[2] + extr[3])))
-    axb = fg.add_subplot(gs[19:29,  0:20])
+    axT = fg.add_subplot(
+        gs[ 0:10,  0:20],
+        projection = cartopy.crs.Robinson(),
+    )
+    axL = pyguymer3.geo.add_top_down_axis(
+        fg,
+        -97.0,
+        +40.0,
+        2400.0e3,
+        gs = gs[10:19,  0:10],
+    )
+    axR = pyguymer3.geo.add_top_down_axis(
+        fg,
+        +13.0,
+        +54.0,
+        2000.0e3,
+        gs = gs[10:19, 10:20],
+    )
+    axB = fg.add_subplot(
+        gs[19:29,  0:20],
+    )
 
     # Configure axis (top) ...
-    axt.set_global()
-    pyguymer3.geo.add_map_background(axt, resolution = "large8192px")
-    axt.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
+    axT.set_global()
+    pyguymer3.geo.add_map_background(axT, resolution = "large8192px")
+    axT.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
 
     # Configure axis (left) ...
-    axl.set_extent(extl)
-    pyguymer3.geo.add_map_background(axl, resolution = "large8192px")
-    axl.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
+    pyguymer3.geo.add_map_background(axL, resolution = "large8192px")
+    axL.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
 
     # Configure axis (right) ...
-    axr.set_extent(extr)
-    pyguymer3.geo.add_map_background(axr, resolution = "large8192px")
-    axr.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
+    pyguymer3.geo.add_map_background(axR, resolution = "large8192px")
+    axR.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
 
     # Add notable lines of latitude manually (top) ...
     y1 = 66.0 + 33.0 / 60.0 + 46.2 / 3600.0                                     # [°]
     y2 = 23.0 + 26.0 / 60.0 + 13.8 / 3600.0                                     # [°]
-    pyguymer3.geo.add_horizontal_gridlines(axt, extt, locs = [-y2, -y1, 0.0, +y1, +y2])
+    pyguymer3.geo.add_horizontal_gridlines(
+        axT,
+        locs = [-y2, -y1, 0.0, +y1, +y2],
+    )
 
     # Add notable lines of longitude and latitude manually (left) ...
-    pyguymer3.geo.add_horizontal_gridlines(axl, extl, locs = range(-90, +100, 10))
-    pyguymer3.geo.add_vertical_gridlines(axl, extl, locs = range(-180, +190, 10))
+    pyguymer3.geo.add_horizontal_gridlines(
+        axL,
+        locs = range(-90, +100, 10),
+    )
+    pyguymer3.geo.add_vertical_gridlines(
+        axL,
+        locs = range(-180, +190, 10),
+    )
 
     # Add notable lines of longitude and latitude manually (right) ...
-    pyguymer3.geo.add_horizontal_gridlines(axr, extr, locs = range(-90, +100, 10))
-    pyguymer3.geo.add_vertical_gridlines(axr, extr, locs = range(-180, +190, 10))
+    pyguymer3.geo.add_horizontal_gridlines(
+        axR,
+        locs = range(-90, +100, 10),
+    )
+    pyguymer3.geo.add_vertical_gridlines(
+        axR,
+        locs = range(-180, +190, 10),
+    )
 
     # Load airport list ...
     db = load_airport_list()
@@ -123,6 +133,7 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
     pleasureX = []
     pleasureY = []                                                              # [1000 km]
     minYear = 0
+    maxYear = pyguymer3.now().year
     total_dist = 0.0                                                            # [km]
 
     # Open flight log ...
@@ -185,21 +196,21 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
             flights[flight] = True
 
             # Draw the great circle ...
-            axt.plot(
+            axT.plot(
                 [lon1, lon2],
                 [lat1, lat2],
                     color = "red",
                 linewidth = 1.0,
                 transform = cartopy.crs.Geodetic(),
             )
-            axl.plot(
+            axL.plot(
                 [lon1, lon2],
                 [lat1, lat2],
                     color = "red",
                 linewidth = 1.0,
                 transform = cartopy.crs.Geodetic(),
             )
-            axr.plot(
+            axR.plot(
                 [lon1, lon2],
                 [lat1, lat2],
                     color = "red",
@@ -216,22 +227,33 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
                 extraCountries.append(country2)
 
     # Plot histograms ...
-    axb.bar(businessX, businessY, width = 2.0 * hw, label = "Business")
-    axb.bar(pleasureX, pleasureY, width = 2.0 * hw, label = "Pleasure")
-    axb.grid()
-    axb.legend()
-    axb.set_xticks(range(minYear, pyguymer3.now().year + 1))
-    axb.set_ylabel("Distance [1000 km/year]")
+    axB.bar(businessX, businessY, width = 2.0 * hw, label = "Business")
+    axB.bar(pleasureX, pleasureY, width = 2.0 * hw, label = "Pleasure")
+    axB.grid()
+    axB.legend()
+    # axB.set_xticks(                                                             # MatPlotLib ≥ 3.5.0
+    #     range(minYear, maxYear + 1),                                            # MatPlotLib ≥ 3.5.0
+    #       labels = range(minYear, maxYear + 1),                                 # MatPlotLib ≥ 3.5.0
+    #           ha = "right",                                                     # MatPlotLib ≥ 3.5.0
+    #     rotation = 45,                                                          # MatPlotLib ≥ 3.5.0
+    # )                                                                           # MatPlotLib ≥ 3.5.0
+    axB.set_xticks(range(minYear, maxYear + 1))                                   # MatPlotLib < 3.5.0
+    axB.set_xticklabels(                                                        # MatPlotLib < 3.5.0
+        range(minYear, maxYear + 1),                                            # MatPlotLib < 3.5.0
+              ha = "right",                                                     # MatPlotLib < 3.5.0
+        rotation = 45,                                                          # MatPlotLib < 3.5.0
+    )                                                                           # MatPlotLib < 3.5.0
+    axB.set_ylabel("Distance [1000 km/year]")
 
     # Add annotation ...
     label = f"You have flown {total_dist:,.1f} km. You have flown around the Earth {total_dist / 40030.2:,.1f} times. You have flown to the Moon {total_dist / 384402.0:,.1f} times."
-    axt.text(
+    axT.text(
         0.5,
         -0.02,
         label,
                    fontsize = 6,
         horizontalalignment = "center",
-                  transform = axt.transAxes,
+                  transform = axT.transAxes,
           verticalalignment = "center",
     )
 
@@ -267,21 +289,21 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
             # Fill the country in and remove it from the list ...
             # NOTE: Removing them from the list enables us to print out the ones
             #       that where not found later on.
-            axt.add_geometries(
+            axT.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (1.0, 0.0, 0.0, 0.25),
                 facecolor = (1.0, 0.0, 0.0, 0.25),
                 linewidth = 0.5,
             )
-            axl.add_geometries(
+            axL.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (1.0, 0.0, 0.0, 0.25),
                 facecolor = (1.0, 0.0, 0.0, 0.25),
                 linewidth = 0.5,
             )
-            axr.add_geometries(
+            axR.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (1.0, 0.0, 0.0, 0.25),
@@ -291,21 +313,21 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
             extraCountries.remove(neName)
         else:
             # Outline the country ...
-            axt.add_geometries(
+            axT.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
                 facecolor = (0.0, 0.0, 0.0, 0.0 ),
                 linewidth = 0.5,
             )
-            axl.add_geometries(
+            axL.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
                 facecolor = (0.0, 0.0, 0.0, 0.0 ),
                 linewidth = 0.5,
             )
-            axr.add_geometries(
+            axR.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
