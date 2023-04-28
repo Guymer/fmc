@@ -84,16 +84,16 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
 
     # Configure axis (top) ...
     axT.set_global()
+    pyguymer3.geo.add_coastlines(axT, resolution = "i")
     pyguymer3.geo.add_map_background(axT, resolution = "large8192px")
-    axT.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
 
     # Configure axis (left) ...
+    pyguymer3.geo.add_coastlines(axL, resolution = "i")
     pyguymer3.geo.add_map_background(axL, resolution = "large8192px")
-    axL.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
 
     # Configure axis (right) ...
+    pyguymer3.geo.add_coastlines(axR, resolution = "i")
     pyguymer3.geo.add_map_background(axR, resolution = "large8192px")
-    axR.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
 
     # Add notable lines of latitude manually (top) ...
     y1 = 66.0 + 33.0 / 60.0 + 46.2 / 3600.0                                     # [°]
