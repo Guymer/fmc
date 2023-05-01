@@ -56,12 +56,11 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
     # Create figure ...
     fg = matplotlib.pyplot.figure(figsize = (8, 12))
 
-    # Create grid specification ...
-    gs = fg.add_gridspec(29, 20)
-
     # Create axes ...
     axT = fg.add_subplot(
-        gs[ 0:10,  0:20],
+        3,
+        2,
+        (1, 2),
         projection = cartopy.crs.Robinson(),
     )
     axL = pyguymer3.geo.add_top_down_axis(
@@ -69,17 +68,23 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
         -97.0,
         +40.0,
         2400.0e3,
-        gs = gs[10:19,  0:10],
+        nrows = 3,
+        ncols = 2,
+        index = 3,
     )
     axR = pyguymer3.geo.add_top_down_axis(
         fg,
         +13.0,
         +54.0,
         2000.0e3,
-        gs = gs[10:19, 10:20],
+        nrows = 3,
+        ncols = 2,
+        index = 4,
     )
     axB = fg.add_subplot(
-        gs[19:29,  0:20],
+        3,
+        2,
+        (5, 6),
     )
 
     # Configure axis (top) ...
