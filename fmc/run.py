@@ -19,7 +19,6 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
                  "font.size" : 8,
             }
         )
-        import matplotlib.image
         import matplotlib.pyplot
     except:
         raise Exception("\"matplotlib\" is not installed; run \"pip install --user matplotlib\"") from None
