@@ -193,27 +193,36 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
                 continue
             flights[flight] = True
 
+            # Find the great circle ...
+            circle = pyguymer3.geo.great_circle(
+                lon1,
+                lat1,
+                lon2,
+                lat2,
+                npoint = 101,
+            )
+
             # Draw the great circle ...
-            axT.plot(
-                [lon1, lon2],
-                [lat1, lat2],
-                    color = "red",
+            axT.add_geometries(
+                pyguymer3.geo.extract_lines(circle),
+                cartopy.crs.PlateCarree(),
+                edgecolor = (1.0, 0.0, 0.0, 1.0),
+                facecolor = "none",
                 linewidth = 1.0,
-                transform = cartopy.crs.Geodetic(),
             )
-            axL.plot(
-                [lon1, lon2],
-                [lat1, lat2],
-                    color = "red",
+            axL.add_geometries(
+                pyguymer3.geo.extract_lines(circle),
+                cartopy.crs.PlateCarree(),
+                edgecolor = (1.0, 0.0, 0.0, 1.0),
+                facecolor = "none",
                 linewidth = 1.0,
-                transform = cartopy.crs.Geodetic(),
             )
-            axR.plot(
-                [lon1, lon2],
-                [lat1, lat2],
-                    color = "red",
+            axR.add_geometries(
+                pyguymer3.geo.extract_lines(circle),
+                cartopy.crs.PlateCarree(),
+                edgecolor = (1.0, 0.0, 0.0, 1.0),
+                facecolor = "none",
                 linewidth = 1.0,
-                transform = cartopy.crs.Geodetic(),
             )
 
             # Find countries and add them to the list if either are missing ...
