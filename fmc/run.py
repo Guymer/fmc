@@ -237,7 +237,7 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
     axB.bar(businessX, businessY, width = 2.0 * hw, label = "Business")
     axB.bar(pleasureX, pleasureY, width = 2.0 * hw, label = "Pleasure")
     axB.grid()
-    axB.legend()
+    axB.legend(loc = "upper right")
     # axB.set_xticks(                                                             # MatPlotLib ≥ 3.5.0
     #     range(minYear, maxYear + 1),                                            # MatPlotLib ≥ 3.5.0
     #       labels = range(minYear, maxYear + 1),                                 # MatPlotLib ≥ 3.5.0
@@ -258,7 +258,6 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
         0.5,
         -0.02,
         label,
-                   fontsize = 6,
         horizontalalignment = "center",
                   transform = axT.transAxes,
           verticalalignment = "center",
