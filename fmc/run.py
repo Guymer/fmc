@@ -253,7 +253,9 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
     axB.set_ylabel("Distance [1000 km/year]")
 
     # Add annotation ...
-    label = f"You have flown {total_dist:,.1f} km. You have flown around the Earth {total_dist / 40030.2:,.1f} times. You have flown to the Moon {total_dist / 384402.0:,.1f} times."
+    label = f"You have flown {total_dist:,.1f} km."
+    label += f" You have flown around the Earth {total_dist / (0.001 * pyguymer3.CIRCUMFERENCE_OF_EARTH):,.1f} times."
+    label += f" You have flown to the Moon {total_dist / (0.001 * pyguymer3.EARTH_MOON_DISTANCE):,.1f} times."
     axT.text(
         0.5,
         -0.02,
