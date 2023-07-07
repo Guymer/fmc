@@ -14,9 +14,10 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
         import matplotlib
         matplotlib.rcParams.update(
             {
-                   "backend" : "Agg",                                           # NOTE: See https://matplotlib.org/stable/gallery/user_interfaces/canvasagg.html
-                "figure.dpi" : 300,
-                 "font.size" : 8,
+                       "backend" : "Agg",                                       # NOTE: See https://matplotlib.org/stable/gallery/user_interfaces/canvasagg.html
+                    "figure.dpi" : 300,
+                "figure.figsize" : (9.6, 7.2),                                  # NOTE: See https://github.com/Guymer/misc/blob/main/README.md#matplotlib-figure-sizes
+                     "font.size" : 8,
             }
         )
         import matplotlib.pyplot
@@ -50,7 +51,11 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
     hw = 0.2
 
     # Create figure ...
-    fg = matplotlib.pyplot.figure(figsize = (8, 12))
+    # NOTE: I would like to use (4.8, 7.2) so as to be consistent with all my
+    #       other figures (see linked 4K discussion above), however, the result
+    #       is very poor due to the too wide, single line, summary label/string.
+    #       The result gets even worse when ".tight_layout()" is called.
+    fg = matplotlib.pyplot.figure(figsize = (2 * 4.8, 2 * 7.2))
 
     # Create axes ...
     axT = fg.add_subplot(
