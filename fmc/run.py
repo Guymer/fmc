@@ -241,7 +241,6 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
     # Plot histograms ...
     axB.bar(businessX, businessY, width = 2.0 * hw, label = "Business")
     axB.bar(pleasureX, pleasureY, width = 2.0 * hw, label = "Pleasure")
-    axB.grid()
     axB.legend(loc = "upper right")
     # axB.set_xticks(                                                             # MatPlotLib ≥ 3.5.0
     #     range(minYear, maxYear + 1),                                            # MatPlotLib ≥ 3.5.0
@@ -256,6 +255,17 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
         rotation = 45,                                                          # MatPlotLib < 3.5.0
     )                                                                           # MatPlotLib < 3.5.0
     axB.set_ylabel("Distance [1000 km/year]")
+    axB.yaxis.grid(True)
+
+    # Loop over years ...
+    for i in range(minYear, maxYear + 1, 2):
+        # Configure axis ...
+        axB.axvspan(
+            i - 0.5,
+            i + 0.5,
+                alpha = 0.25,
+            facecolor = "grey",
+        )
 
     # Add annotation ...
     label = f"You have flown {total_dist:,.1f} km."
