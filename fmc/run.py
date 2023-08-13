@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Define function ...
-def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = None):
+def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = None, renames = None):
     # Import standard modules ...
     import csv
 
@@ -40,6 +40,8 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
     # Populate default values ...
     if extraCountries is None:
         extraCountries = []
+    if flightMap is None:
+        flightMap = flightLog.replace(".csv", ".png")
     if notVisited is None:
         notVisited = []
     if renames is None:
@@ -362,12 +364,12 @@ def run(flightLog, /, *, extraCountries = None, notVisited = None, renames = Non
     fg.tight_layout()
 
     # Save figure ...
-    fg.savefig(flightLog.replace(".csv", ".png"))
+    fg.savefig(flightMap)
     matplotlib.pyplot.close(fg)
 
     # Optimize PNG ...
     pyguymer3.image.optimize_image(
-        flightLog.replace(".csv", ".png"),
+        flightMap,
         strip = True,
     )
 
