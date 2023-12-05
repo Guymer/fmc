@@ -268,14 +268,14 @@ def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = N
     # Loop over years ...
     for i in range(minYear, maxYear + 1, 2):
         # Configure axis ...
-        # NOTE: As of 13/Aug/2023, the default "zorder" of the bars is 1 and the
-        #       default "zorder" of the vspans is also 1.
+        # NOTE: As of 13/Aug/2023, the default "zorder" of the bars is 1.0 and
+        #       the default "zorder" of the vspans is 1.0.
         axB.axvspan(
             i - 0.5,
             i + 0.5,
                 alpha = 0.25,
             facecolor = "grey",
-               zorder = 0,
+               zorder = 0.0,
         )
 
     # Add annotation ...
