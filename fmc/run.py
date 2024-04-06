@@ -72,7 +72,7 @@ def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = N
         (1, 2),
         projection = cartopy.crs.Robinson(),
     )
-    axL = pyguymer3.geo.add_top_down_axis(
+    axL = pyguymer3.geo.add_topDown_axis(
         fg,
         -97.0,
         +40.0,
@@ -81,7 +81,7 @@ def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = N
         ncols = 2,
         index = 3,
     )
-    axR = pyguymer3.geo.add_top_down_axis(
+    axR = pyguymer3.geo.add_topDown_axis(
         fg,
         +13.0,
         +54.0,
