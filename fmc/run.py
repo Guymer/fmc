@@ -66,27 +66,27 @@ def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = N
     fg = matplotlib.pyplot.figure(figsize = (2 * 4.8, 2 * 7.2))
 
     # Create axes ...
-    axT = fg.add_subplot(
-        3,
-        2,
-        (1, 2),
-        projection = cartopy.crs.Robinson(),
-    )
-    axL = pyguymer3.geo.add_topDown_axis(
+    axT = pyguymer3.geo.add_axis(
         fg,
-        -97.0,
-        +40.0,
-         dist = 2400.0e3,
-        index = 3,
+        index = (1, 2),
         ncols = 2,
         nrows = 3,
     )
-    axR = pyguymer3.geo.add_topDown_axis(
+    axL = pyguymer3.geo.add_axis(
         fg,
-        +13.0,
-        +54.0,
+         dist = 2400.0e3,
+        index = 3,
+          lat = +40.0,
+          lon = -97.0,
+        ncols = 2,
+        nrows = 3,
+    )
+    axR = pyguymer3.geo.add_axis(
+        fg,
          dist = 2000.0e3,
         index = 4,
+          lat = +54.0,
+          lon = +13.0,
         ncols = 2,
         nrows = 3,
     )
