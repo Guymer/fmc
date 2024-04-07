@@ -97,7 +97,6 @@ def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = N
     )
 
     # Configure axis (top) ...
-    axT.set_global()
     pyguymer3.geo.add_map_background(axT, resolution = "large8192px")
 
     # Configure axis (left) ...
