@@ -105,34 +105,6 @@ def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = N
     # Configure axis (right) ...
     pyguymer3.geo.add_map_background(axR, resolution = "large8192px")
 
-    # Add notable lines of latitude manually (top) ...
-    y1 = 66.0 + 33.0 / 60.0 + 46.2 / 3600.0                                     # [°]
-    y2 = 23.0 + 26.0 / 60.0 + 13.8 / 3600.0                                     # [°]
-    pyguymer3.geo.add_horizontal_gridlines(
-        axT,
-        locs = [-y2, -y1, 0.0, +y1, +y2],
-    )
-
-    # Add notable lines of longitude and latitude manually (left) ...
-    pyguymer3.geo.add_horizontal_gridlines(
-        axL,
-        locs = range(-90, +100, 10),
-    )
-    pyguymer3.geo.add_vertical_gridlines(
-        axL,
-        locs = range(-180, +190, 10),
-    )
-
-    # Add notable lines of longitude and latitude manually (right) ...
-    pyguymer3.geo.add_horizontal_gridlines(
-        axR,
-        locs = range(-90, +100, 10),
-    )
-    pyguymer3.geo.add_vertical_gridlines(
-        axR,
-        locs = range(-180, +190, 10),
-    )
-
     # Load airport list ...
     db = load_airport_list()
 
