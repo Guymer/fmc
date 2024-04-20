@@ -227,7 +227,7 @@ def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = N
     #           ha = "right",                                                     # MatPlotLib ≥ 3.5.0
     #     rotation = 45,                                                          # MatPlotLib ≥ 3.5.0
     # )                                                                           # MatPlotLib ≥ 3.5.0
-    axB.set_xticks(range(minYear, maxYear + 1))                                   # MatPlotLib < 3.5.0
+    axB.set_xticks(range(minYear, maxYear + 1))                                 # MatPlotLib < 3.5.0
     axB.set_xticklabels(                                                        # MatPlotLib < 3.5.0
         range(minYear, maxYear + 1),                                            # MatPlotLib < 3.5.0
               ha = "right",                                                     # MatPlotLib < 3.5.0
