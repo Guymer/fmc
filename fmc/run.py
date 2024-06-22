@@ -161,11 +161,15 @@ def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = N
             # Add it's distance to the total ...
             total_dist += dist                                                  # [km]
 
-            # Add it's distance to the histogram ...
-            if row[3].lower() == "business":
-                businessY[businessX.index(int(row[2][0:4]) - hw)] += 0.001 * dist   # [1000 km]
-            elif row[3].lower() == "pleasure":
-                pleasureY[pleasureX.index(int(row[2][0:4]) + hw)] += 0.001 * dist   # [1000 km]
+            # Add it's distance to the histogram (if it is one of the two
+            # recognised fields) ...
+            match row[3].lower():
+                case "business":
+                    businessY[businessX.index(int(row[2][0:4]) - hw)] += 0.001 * dist   # [1000 km]
+                case "pleasure":
+                    pleasureY[pleasureX.index(int(row[2][0:4]) + hw)] += 0.001 * dist   # [1000 km]
+                case _:
+                    pass
 
             # Create flight name and skip this flight if it has already been
             # drawn ...
