@@ -9,6 +9,7 @@ if __name__ == "__main__":
     # Run function ...
     fmc.run(
         "example.csv",
+                 debug = False,
         extraCountries = [
             "Denmark",
             "Germany",
@@ -19,12 +20,12 @@ if __name__ == "__main__":
             "Russia",
             "Switzerland",
         ],
-        notVisited = [
+            notVisited = [
             "Hong Kong",
             "Singapore",
         ],
-        renames = {
+               renames = {
             "Czech Republic" : "Czechia",
-            "United States" : "United States of America",
+             "United States" : "United States of America",
         }
     )

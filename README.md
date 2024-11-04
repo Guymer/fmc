@@ -15,6 +15,7 @@ import fmc
 # Run function ...
 fmc.run(
     "example.csv",
+             debug = False,
     extraCountries = [
         "Denmark",
         "Germany",
@@ -25,13 +26,13 @@ fmc.run(
         "Russia",
         "Switzerland",
     ],
-    notVisited = [
+        notVisited = [
         "Hong Kong",
         "Singapore",
     ],
-    renames = {
+           renames = {
         "Czech Republic" : "Czechia",
-        "United States" : "United States of America",
+         "United States" : "United States of America",
     }
 )
 ```
