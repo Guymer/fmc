@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
 
 # Define function ...
-def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = None, renames = None):
+def run(
+    flightLog,
+    /,
+    *,
+             debug = __debug__,
+    extraCountries = None,
+         flightMap = None,
+        notVisited = None,
+           renames = None,
+           timeout = 60.0,
+):
     # Import standard modules ...
     import csv
     import os
@@ -68,12 +78,14 @@ def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = N
     # Create axes ...
     axT = pyguymer3.geo.add_axis(
         fg,
+        debug = debug,
         index = (1, 2),
         ncols = 2,
         nrows = 3,
     )
     axL = pyguymer3.geo.add_axis(
         fg,
+        debug = debug,
          dist = 2400.0e3,
         index = 3,
           lat = +40.0,
@@ -83,6 +95,7 @@ def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = N
     )
     axR = pyguymer3.geo.add_axis(
         fg,
+        debug = debug,
          dist = 2000.0e3,
         index = 4,
           lat = +54.0,
@@ -97,13 +110,25 @@ def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = N
     )
 
     # Configure axis (top) ...
-    pyguymer3.geo.add_map_background(axT, resolution = "large8192px")
+    pyguymer3.geo.add_map_background(
+        axT,
+             debug = debug,
+        resolution = "large8192px",
+    )
 
     # Configure axis (left) ...
-    pyguymer3.geo.add_map_background(axL, resolution = "large8192px")
+    pyguymer3.geo.add_map_background(
+        axL,
+             debug = debug,
+        resolution = "large8192px",
+    )
 
     # Configure axis (right) ...
-    pyguymer3.geo.add_map_background(axR, resolution = "large8192px")
+    pyguymer3.geo.add_map_background(
+        axR,
+             debug = debug,
+        resolution = "large8192px",
+    )
 
     # Load airport list ...
     db = load_airport_list()
@@ -187,7 +212,9 @@ def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = N
                 lat1,
                 lon2,
                 lat2,
-                npoint = 101,
+                  debug = debug,
+                maxdist = 12.0 * 1852.0,
+                 npoint = None,
             )
 
             # Draw the great circle ...
@@ -354,7 +381,9 @@ def run(flightLog, /, *, extraCountries = None, flightMap = None, notVisited = N
     # Optimize PNG ...
     pyguymer3.image.optimize_image(
         flightMap,
-        strip = True,
+          debug = debug,
+          strip = True,
+        timeout = timeout,
     )
 
     # Print out the countries that were not drawn ...
