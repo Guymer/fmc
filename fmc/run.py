@@ -184,6 +184,8 @@ def run(
             # Find coordinates for this flight ...
             lon1, lat1 = coordinates_of_IATA(db, iata1)                         # [°], [°]
             lon2, lat2 = coordinates_of_IATA(db, iata2)                         # [°], [°]
+            if debug:
+                print(f"INFO: You have flown between {iata1}, which is at ({lat1:+10.6f}°,{lon1:+11.6f}°), and {iata2}, which is at ({lat2:+10.6f}°,{lon2:+11.6f}°).")
             dist, _, _ = pyguymer3.geo.calc_dist_between_two_locs(
                 lon1,
                 lat1,
