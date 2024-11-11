@@ -8,17 +8,17 @@ def run(
              debug = __debug__,
     extraCountries = None,
          flightMap = None,
-          leftDist = 2400.0e3,
-           leftLat = +40.0,
-           leftLon = -97.0,
+          leftDist = 2392.2e3,          # These default values come from my own
+           leftLat = +39.411078,        # personal flight log.
+           leftLon = -97.871822,
            maxYear = None,
            minYear = None,
         notVisited = None,
           optimize = True,
            renames = None,
-         rightDist = 2000.0e3,
-          rightLat = +48.0,
-          rightLon = +13.0,
+         rightDist = 2345.0e3,          # These default values come from my own
+          rightLat = +49.879310,        # personal flight log.
+          rightLon =  +3.172021,
              strip = True,
            timeout = 60.0,
 ):
