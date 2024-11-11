@@ -17,7 +17,7 @@ def run(
           optimize = True,
            renames = None,
          rightDist = 2000.0e3,
-          rightLat = +60.0,
+          rightLat = +48.0,
           rightLon = +13.0,
              strip = True,
            timeout = 60.0,
