@@ -16,9 +16,9 @@ import fmc
 fmc.run(
     "example.csv",
              debug = False,
-    extraCountries = [
-        "Denmark",
-        "Germany",
+    extraCountries = [                  # These are extra countries that you
+        "Denmark",                      # have visited but which you have not
+        "Germany",                      # flown to (e.g., you took a train).
         "Ireland",
         "Myanmar",
         "Nepal",
@@ -26,18 +26,20 @@ fmc.run(
         "Russia",
         "Switzerland",
     ],
-        notVisited = [
-        "Hong Kong",
-        "Singapore",
+        notVisited = [                  # These are countries which you have
+        "Hong Kong",                    # flown to but not visited (e.g., you
+        "Singapore",                    # just transferred planes).
     ],
-           renames = {
+           renames = {                  # (see documentation below)
         "Czech Republic" : "Czechia",
          "United States" : "United States of America",
     }
 )
 ```
 
-You must pass it the path to a CSV file containing all of the flights that you have taken. Additionally, you can optionally pass it a list of other countries that you have visited but that you might not have flown to (`extraCountries`). Furthermore, you can optionally pass it a list of countries that you have **not** visited, such as those containing transfer airports (`notVisited`). FMC uses two different databases of countries behind the scenes and (very annoyingly) they use different names for some countries. If any of these are ones that you have visited then you can correct FMC's behaviour by explicitly providing a dictionary of countries to be renamed (`renames`).
+You must pass it the path to a CSV file containing all of the flights that you have taken. Additionally, you can optionally pass it a list of other countries that you have visited but that you might not have flown to (`extraCountries`). Furthermore, you can optionally pass it a list of countries that you have **not** visited, such as those containing transfer airports (`notVisited`).
+
+FMC uses two different databases of countries behind the scenes and (very annoyingly) they use different names for some countries. If any of these are ones that you have visited then you can correct FMC's behaviour by explicitly providing a dictionary of countries to be renamed (`renames`). To find out the list of country names supported then look at ["Natural Earth Countries.json" in my "misc" repository](https://github.com/Guymer/misc/blob/main/Natural%20Earth%20Countries.json).
 
 ## Example Output
 
@@ -45,7 +47,7 @@ FMC will create a PNG in the directory of the CSV file. Below is the result for 
 
 ![FMC output for the example](example.png)
 
-FMC will also print out a list of countries which it thinks that you have visited.
+FMC will also print out a list of countries which it thinks that you have visited, so that you can fine tune your usage of `extraCountries`, `notVisited` and `renames`.
 
 ## Dependencies
 
