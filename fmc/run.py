@@ -11,7 +11,9 @@ def run(
            maxYear = None,
            minYear = None,
         notVisited = None,
+          optimize = True,
            renames = None,
+             strip = True,
            timeout = 60.0,
 ):
     # Import standard modules ...
@@ -59,7 +61,7 @@ def run(
     if extraCountries is None:
         extraCountries = []
     if flightMap is None:
-        flightMap = flightLog.replace(".csv", ".png")
+        flightMap = f'{flightLog.removesuffix(".csv")}.png'
     if maxYear is None:
         maxYear = pyguymer3.now().year
     if notVisited is None:
@@ -381,13 +383,14 @@ def run(
     fg.savefig(flightMap)
     matplotlib.pyplot.close(fg)
 
-    # Optimize PNG ...
-    pyguymer3.image.optimize_image(
-        flightMap,
-          debug = debug,
-          strip = True,
-        timeout = timeout,
-    )
+    # Optimize PNG (if required) ...
+    if optimize:
+        pyguymer3.image.optimize_image(
+            flightMap,
+              debug = debug,
+              strip = strip,
+            timeout = timeout,
+        )
 
     # Print out the countries that were not drawn ...
     for country in sorted(extraCountries):
