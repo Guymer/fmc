@@ -8,6 +8,8 @@ def run(
              debug = __debug__,
     extraCountries = None,
          flightMap = None,
+           maxYear = None,
+           minYear = None,
         notVisited = None,
            renames = None,
            timeout = 60.0,
@@ -58,6 +60,8 @@ def run(
         extraCountries = []
     if flightMap is None:
         flightMap = flightLog.replace(".csv", ".png")
+    if maxYear is None:
+        maxYear = pyguymer3.now().year
     if notVisited is None:
         notVisited = []
     if renames is None:
@@ -139,8 +143,6 @@ def run(
     businessY = []                                                              # [1000 km]
     pleasureX = []
     pleasureY = []                                                              # [1000 km]
-    minYear = 0
-    maxYear = pyguymer3.now().year
     total_dist = 0.0                                                            # [km]
 
     # Open flight log ...
@@ -157,11 +159,12 @@ def run(
 
             # Check if this is the first line ...
             if len(businessX) == 0:
-                # Set the minimum year ...
-                minYear = int(row[2][0:4])
+                # Set the minimum year (if required)...
+                if minYear is None:
+                    minYear = int(row[2][0:4])
 
                 # Loop over the full range of years ...
-                for year in range(minYear, pyguymer3.now().year + 1):
+                for year in range(minYear, maxYear + 1):
                     # NOTE: This is a bit of a hack, I should really use NumPy
                     #       but I do not want to bring in another dependency
                     #       that people may not have.
