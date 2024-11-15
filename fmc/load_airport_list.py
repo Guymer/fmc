@@ -14,9 +14,9 @@ def load_airport_list(
 
     Parameters
     ----------
-    dat : str, option
-        the CSV to load (at time of writing, only "airports.dat" and
-        "airports-extended.dat" will work)
+    dat : str, optional
+        the OpenFlights airport database CSV to load (at time of writing, only
+        "airports.dat" and "airports-extended.dat" will work)
     debug : bool, optional
         print debug messages
 
