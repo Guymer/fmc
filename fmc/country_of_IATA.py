@@ -30,7 +30,7 @@ def country_of_IATA(
     """
 
     # **************************************************************************
-    #
+
     # Loop over all airports ...
     for airport in airports:
         # Skip this airport if it does not have an IATA code ...
