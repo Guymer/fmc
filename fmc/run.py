@@ -23,6 +23,59 @@ def run(
              strip = True,
            timeout = 60.0,
 ):
+    """Make a PNG map from a CSV file
+
+    Parameters
+    ----------
+    flightLog : str
+        the CSV of your flights
+    dat : str, optional
+        the OpenFlights airport database CSV to load (at time of writing, only
+        "airports.dat" and "airports-extended.dat" will work)
+    debug : bool, optional
+        print debug messages
+    extraCountries : list of str, optional
+        a list of extra countries that you have visited but which you have not
+        flown to (e.g., you took a train)
+    flightMap : str, optional
+        the PNG map
+    leftDist : float, optional
+        the field-of-view around the left-hand sub-map central point (in metres)
+    leftLat : float, optional
+        the latitude of the central point of the left-hand sub-map (in degrees)
+    leftLon : float, optional
+        the longitude of the central point of the left-hand sub-map (in degrees)
+    maxYear : int, optional
+        the maximum year to use for the survey
+    minyear : int, optional
+        the minimum year to use for the survey
+    notVisited : list of str, optional
+        a list of countries which you have flown to but not visited (e.g., you
+        just transferred planes)
+    optimize : bool, optional
+        optimize the PNG map
+    renames : dict, optional
+        a mapping from OpenFlights country names to Natural Earth country names
+    rightDist : float, optional
+        the field-of-view around the right-hand sub-map central point (in metres)
+    rightLat : float, optional
+        the latitude of the central point of the right-hand sub-map (in degrees)
+    rightLon : float, optional
+        the longitude of the central point of the right-hand sub-map (in degrees)
+    strip : bool, optional
+        strip metadata from PNG map too
+    timeout : float, optional
+        the timeout for any requests/subprocess calls (in seconds)
+
+    Notes
+    -----
+    Copyright 2016 Thomas Guymer [1]_
+
+    References
+    ----------
+    .. [1] FMC, https://github.com/Guymer/fmc
+    """
+
     # Import standard modules ...
     import csv
     import os
@@ -185,6 +238,18 @@ def run(
                     pleasureX.append(year + hw)
                     pleasureY.append(0.0)                                       # [1000 km]
 
+            # Extract the year that this flight started in and skip if it is out
+            # of scope ...
+            year = int(row[2][0:4])
+            if year < minYear:
+                if debug:
+                    print(f"DEBUG: A flight between {iata1} and {iata2} took place in {year:d}, which was before {minYear:d}.")
+                continue
+            if year > maxYear:
+                if debug:
+                    print(f"DEBUG: A flight between {iata1} and {iata2} took place in {year:d}, which was after {maxYear:d}.")
+                continue
+
             # Find coordinates for this flight ...
             lon1, lat1 = coordinates_of_IATA(db, iata1)                         # [°], [°]
             lon2, lat2 = coordinates_of_IATA(db, iata2)                         # [°], [°]
@@ -207,9 +272,9 @@ def run(
             # recognised fields) ...
             match row[3].lower():
                 case "business":
-                    businessY[businessX.index(int(row[2][0:4]) - hw)] += 0.001 * dist   # [1000 km]
+                    businessY[businessX.index(year - hw)] += 0.001 * dist       # [1000 km]
                 case "pleasure":
-                    pleasureY[pleasureX.index(int(row[2][0:4]) + hw)] += 0.001 * dist   # [1000 km]
+                    pleasureY[pleasureX.index(year + hw)] += 0.001 * dist       # [1000 km]
                 case _:
                     pass
 
