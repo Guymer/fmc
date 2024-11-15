@@ -5,6 +5,7 @@ def run(
     flightLog,
     /,
     *,
+               dat = "airports.dat",
              debug = __debug__,
     extraCountries = None,
          flightMap = None,
@@ -143,7 +144,10 @@ def run(
     )
 
     # Load airport list ...
-    db = load_airport_list()
+    db = load_airport_list(
+          dat = dat,
+        debug = debug,
+    )
 
     # Initialize flight dictionary, histograms and total distance ...
     flights = {}
