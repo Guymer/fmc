@@ -118,7 +118,7 @@ def load_airport_list(
             if "IATA" not in airport:
                 continue
             if airport["IATA"] in iatas:
-                raise Exception(f'two airports have the IATA code of {airport["IATA"]}') from None
+                raise Exception(f'two airports have the IATA code of \"{airport["IATA"]}\"') from None
             iatas.append(airport["IATA"])
         del iatas
 
@@ -128,7 +128,7 @@ def load_airport_list(
             if "ICAO" not in airport:
                 continue
             if airport["ICAO"] in icaos:
-                raise Exception(f'two airports have the ICAO code of {airport["ICAO"]}') from None
+                raise Exception(f'two airports have the ICAO code of \"{airport["ICAO"]}\"') from None
             icaos.append(airport["ICAO"])
         del icaos
 
