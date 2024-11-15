@@ -220,6 +220,8 @@ def run(
 
             # Skip this flight if the codes are not what I expect ...
             if len(iata1) != 3 or len(iata2) != 3:
+                if debug:
+                    print(f"DEBUG: A flight does not have valid IATA codes (\"{iata1}\" and \"{iata2}\").")
                 continue
 
             # Check if this is the first line ...
