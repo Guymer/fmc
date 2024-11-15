@@ -1,19 +1,46 @@
 #!/usr/bin/env python3
 
 # Define function ...
-def load_airport_list():
+def load_airport_list(/, *, dat = "airports.dat"):
+    """Load the airport database
+
+    This function reads in a CSV from OpenFlights, parses all of the columns
+    (converting them to the appropriate data type) and then returns a list of
+    all of the airports.
+
+    Parameters
+    ----------
+    dat : str, option
+        the CSV to load
+
+    Returns
+    -------
+    airports : list
+        the list of all of the airports
+
+    Notes
+    -----
+    Copyright 2016 Thomas Guymer [1]_
+
+    References
+    ----------
+    .. [1] FMC, https://github.com/Guymer/fmc
+    """
+
     # Import standard modules ...
     import csv
     import os
+
+    # **************************************************************************
 
     # Create the empty list ...
     airports = []
 
     # Make database path ...
-    dbpath = f"{os.path.dirname(__file__)}/../openflights/data/airports.dat"
+    datPath = f"{os.path.dirname(__file__)}/../openflights/data/{dat}.dat"
 
     # Check that database is there ...
-    if not os.path.exists(dbpath):
+    if not os.path.exists(datPath):
         print("INFO: The airport database is missing. It is included as a ")
         print("      submodule in Git. If you did not clone this repository with")
         print("      the \"--recursive\" option then you can still pull down the")
@@ -21,7 +48,7 @@ def load_airport_list():
         raise Exception("the airport database is missing") from None
 
     # Open database ...
-    with open(dbpath, "rt", encoding = "utf-8") as fObj:
+    with open(datPath, "rt", encoding = "utf-8") as fObj:
         # Loop over all airports ...
         for row in csv.reader(fObj):
             # Load string parameters ...
