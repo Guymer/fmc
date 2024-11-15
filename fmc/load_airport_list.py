@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
 # Define function ...
-def load_airport_list(*, dat = "airports.dat"):
+def load_airport_list(
+    *,
+      dat = "airports.dat",
+    debug = __debug__,
+):
     """Load the airport database
 
     This function reads in a CSV from OpenFlights, parses all of the columns
@@ -13,6 +17,8 @@ def load_airport_list(*, dat = "airports.dat"):
     dat : str, option
         the CSV to load (at time of writing, only "airports.dat" and
         "airports-extended.dat" will work)
+    debug : bool, optional
+        print debug messages
 
     Returns
     -------
@@ -34,10 +40,7 @@ def load_airport_list(*, dat = "airports.dat"):
 
     # **************************************************************************
 
-    # Create the empty list ...
-    airports = []
-
-    # Make database path ...
+    # Create short-hand ...
     datPath = f"{os.path.dirname(__file__)}/../openflights/data/{dat}"
 
     # Check that database is there ...
@@ -48,11 +51,16 @@ def load_airport_list(*, dat = "airports.dat"):
         print("      submodule by running \"git submodule update --init\" now.")
         raise Exception("the airport database is missing") from None
 
+    # **************************************************************************
+
+    # Create the empty list ...
+    airports = []
+
     # Open database ...
     with open(datPath, "rt", encoding = "utf-8") as fObj:
         # Loop over all airports ...
         for row in csv.reader(fObj):
-            # Load string parameters ...
+            # Load string parameters and remove blank ones ...
             tmp = {
                       "Name" : row[ 1],
                       "City" : row[ 2],
@@ -60,8 +68,12 @@ def load_airport_list(*, dat = "airports.dat"):
                       "IATA" : row[ 4],
                       "ICAO" : row[ 5],
                 "DST-scheme" : row[10],
-                   "TZ-name" : row[11]
+                   "TZ-name" : row[11],
             }
+            if tmp["IATA"] == "\\N":
+                del tmp["IATA"]
+            if tmp["ICAO"] == "\\N":
+                del tmp["ICAO"]
 
             # Try loading numeric parameter ...
             try:
@@ -95,6 +107,32 @@ def load_airport_list(*, dat = "airports.dat"):
 
             # Append dictionary to the list ...
             airports.append(tmp)
+
+    # **************************************************************************
+
+    # Check if the user wants to check the data ...
+    if debug:
+        # Check if any two airports have the same IATA code ...
+        iatas = []
+        for airport in airports:
+            if "IATA" not in airport:
+                continue
+            if airport["IATA"] in iatas:
+                raise Exception(f'two airports have the IATA code of {airport["IATA"]}') from None
+            iatas.append(airport["IATA"])
+        del iatas
+
+        # Check if any two airports have the same ICAO code ...
+        icaos = []
+        for airport in airports:
+            if "ICAO" not in airport:
+                continue
+            if airport["ICAO"] in icaos:
+                raise Exception(f'two airports have the ICAO code of {airport["ICAO"]}') from None
+            icaos.append(airport["ICAO"])
+        del icaos
+
+    # **************************************************************************
 
     # Return the full list ...
     return airports
