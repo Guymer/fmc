@@ -333,8 +333,18 @@ def run(
                 extraCountries.append(country2)
 
     # Plot histograms ...
-    axB.bar(businessX, businessY, width = 2.0 * hw, label = "Business")
-    axB.bar(pleasureX, pleasureY, width = 2.0 * hw, label = "Pleasure")
+    axB.bar(
+        businessX,
+        businessY,
+        label = "Business",
+        width = 2.0 * hw,
+    )
+    axB.bar(
+        pleasureX,
+        pleasureY,
+        label = "Pleasure",
+        width = 2.0 * hw,
+    )
     axB.legend(loc = "upper right")
     # axB.set_xticks(                                                             # MatPlotLib ≥ 3.5.0
     #     range(minYear, maxYear + 1),                                            # MatPlotLib ≥ 3.5.0
