@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Define function ...
-def load_airport_list(/, *, dat = "airports.dat"):
+def load_airport_list(*, dat = "airports.dat"):
     """Load the airport database
 
     This function reads in a CSV from OpenFlights, parses all of the columns
@@ -11,7 +11,8 @@ def load_airport_list(/, *, dat = "airports.dat"):
     Parameters
     ----------
     dat : str, option
-        the CSV to load
+        the CSV to load (at time of writing, only "airports.dat" and
+        "airports-extended.dat" will work)
 
     Returns
     -------
@@ -37,7 +38,7 @@ def load_airport_list(/, *, dat = "airports.dat"):
     airports = []
 
     # Make database path ...
-    datPath = f"{os.path.dirname(__file__)}/../openflights/data/{dat}.dat"
+    datPath = f"{os.path.dirname(__file__)}/../openflights/data/{dat}"
 
     # Check that database is there ...
     if not os.path.exists(datPath):
