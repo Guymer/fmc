@@ -281,9 +281,9 @@ def run(
             # Create flight name and skip this flight if it has already been
             # drawn ...
             if iata1 < iata2:
-                flight = f"{iata1}2{iata2}"
+                flight = f"{iata1}→{iata2}"
             else:
-                flight = f"{iata2}2{iata1}"
+                flight = f"{iata2}→{iata1}"
             if flight in flights:
                 continue
             flights[flight] = True
