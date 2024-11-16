@@ -41,7 +41,7 @@ def coordinates_of_ICAO(
 
         # Check if this is the correct one and return it's coordinates ...
         if airport["ICAO"] == icao:
-            return airport["Longitude"], airport["Latitude"]
+            return airport["lon"], airport["lat"]
 
     # Return defaults if it was not found ...
     return 0.0, 0.0

@@ -78,6 +78,7 @@ def run(
 
     # Import standard modules ...
     import csv
+    import json
     import os
 
     # Import special modules ...
@@ -115,7 +116,6 @@ def run(
     # Import sub-functions ...
     from .coordinates_of_IATA import coordinates_of_IATA
     from .country_of_IATA import country_of_IATA
-    from .load_airport_list import load_airport_list
 
     # Populate default values ...
     if extraCountries is None:
@@ -197,10 +197,8 @@ def run(
     )
 
     # Load airport list ...
-    db = load_airport_list(
-          dat = dat,
-        debug = debug,
-    )
+    with open(f"{os.path.dirname(__file__)}/db.json", "rt", encoding = "utf-8") as fObj:
+        airports = json.load(fObj)
 
     # Initialize flight dictionary, histograms and total distance ...
     flights = {}
@@ -253,8 +251,8 @@ def run(
                 continue
 
             # Find coordinates for this flight ...
-            lon1, lat1 = coordinates_of_IATA(db, iata1)                         # [°], [°]
-            lon2, lat2 = coordinates_of_IATA(db, iata2)                         # [°], [°]
+            lon1, lat1 = coordinates_of_IATA(airports, iata1)                   # [°], [°]
+            lon2, lat2 = coordinates_of_IATA(airports, iata2)                   # [°], [°]
             if debug:
                 print(f"INFO: You have flown between {iata1}, which is at ({lat1:+10.6f}°,{lon1:+11.6f}°), and {iata2}, which is at ({lat2:+10.6f}°,{lon2:+11.6f}°).")
             dist, _, _ = pyguymer3.geo.calc_dist_between_two_locs(
@@ -325,8 +323,8 @@ def run(
             )
 
             # Find countries and add them to the list if either are missing ...
-            country1 = country_of_IATA(db, iata1)
-            country2 = country_of_IATA(db, iata2)
+            country1 = country_of_IATA(airports, iata1)
+            country2 = country_of_IATA(airports, iata2)
             if country1 not in extraCountries:
                 extraCountries.append(country1)
             if country2 not in extraCountries:

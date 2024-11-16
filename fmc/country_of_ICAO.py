@@ -39,7 +39,7 @@ def country_of_ICAO(
 
         # Check if this is the correct one and return it's country ...
         if airport["ICAO"] == icao:
-            return airport["Country"]
+            return airport["ISO 3166-1 English Short Name"]
 
     # Return default if it was not found ...
     return "ERROR"

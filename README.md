@@ -1,6 +1,6 @@
 # Flight Map Creator (FMC)
 
-This Python 3.x module contains all the functions required to create a map of the world with all of your flights overlaid and all of the countries that you have visited shaded in. It also contains an [example input file](example.csv) so that you know what is required to make it work too. The format for a line is `departure airport IATA code`, `arrival airport IATA code`, `year of flight`, `Business`/`Pleasure`. Whilst the flights do not have to be in order in the CSV file the first flight *does* have to have occurred in the first year.
+This Python 3.x module contains all the functions required to create a map of the world with all of your flights overlaid and all of the countries that you have visited shaded in. It also contains an [example input file](example.csv) so that you know what is required to make it work too. The format for a line is `departure airport IATA code`, `arrival airport IATA code`, `year of flight`, `Business`/`Pleasure`. Whilst the flights do not have to be in order in the CSV file the first flight *does* have to have occurred in the first year (if you don't pass `minYear`).
 
 ## Usage
 
@@ -31,15 +31,18 @@ fmc.run(
         "Singapore",                    # just transferred planes).
     ],
            renames = {                  # (see documentation below)
-        "Czech Republic" : "Czechia",
-         "United States" : "United States of America",
+                                        #           airport database → shape database
+                                                           "Türkiye" : "Turkey",
+        "United Kingdom of Great Britain and Northern Ireland (the)" : "United Kingdom",
+                                    "United States of America (the)" : "United States of America",
+                                                          "Viet Nam" : "Vietnam",
     }
 )
 ```
 
 You must pass it the path to a CSV file containing all of the flights that you have taken. Additionally, you can optionally pass it a list of other countries that you have visited but that you might not have flown to (`extraCountries`). Furthermore, you can optionally pass it a list of countries that you have **not** visited, such as those containing transfer airports (`notVisited`).
 
-FMC uses two different databases of countries behind the scenes and (very annoyingly) they use different names for some countries. If any of these are ones that you have visited then you can correct FMC's behaviour by explicitly providing a dictionary of countries to be renamed (`renames`). To find out the list of country names supported then look at ["Natural Earth Countries.json" in my "misc" repository](https://github.com/Guymer/misc/blob/main/Natural%20Earth%20Countries.json).
+FMC uses two different databases of countries behind the scenes and (very annoyingly) they use different names for some countries. If any of these are ones that you have visited then you can correct FMC's behaviour by explicitly providing a dictionary of countries to be renamed (`renames`). To find out the list of country names supported by the airport database then look at ["db.json"](fmc/db.json). To find out the list of country names supported by the shape database then look at ["Natural Earth Countries.json" in my "misc" repository](https://github.com/Guymer/misc/blob/main/Natural%20Earth%20Countries.json).
 
 ## Example Output
 

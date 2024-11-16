@@ -25,7 +25,10 @@ if __name__ == "__main__":
             "Singapore",
         ],
                renames = {
-            "Czech Republic" : "Czechia",
-             "United States" : "United States of America",
+                                        #               airport database → shape database
+                                                               "Türkiye" : "Turkey",
+            "United Kingdom of Great Britain and Northern Ireland (the)" : "United Kingdom",
+                                        "United States of America (the)" : "United States of America",
+                                                              "Viet Nam" : "Vietnam",
         }
     )
