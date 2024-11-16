@@ -31,6 +31,10 @@ def country_of_IATA(
 
     # **************************************************************************
 
+    # Catch special cases ...
+    if iata == "TXL":                   # This airport closed on 4/May/2021.
+        return "Germany"
+
     # Loop over all airports ...
     for airport in airports:
         # Skip this airport if it does not have an IATA code ...
