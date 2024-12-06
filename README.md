@@ -50,6 +50,10 @@ FMC will create a PNG in the directory of the CSV file. Below is the result for 
 
 ![FMC output for the example](example.png)
 
+If you would like to colour the great circles and the countries by the purpose of the flights/visits then you can pass the optional argument `colorByPurpose = True`, which will produce the below result:
+
+![FMC output for the example using an alternative colour scheme](example_colorByPurpose.png)
+
 FMC will also print out a list of countries which it thinks that you have visited, so that you can fine tune your usage of `extraCountries`, `notVisited` and `renames`.
 
 ## Dependencies

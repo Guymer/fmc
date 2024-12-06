@@ -32,3 +32,32 @@ if __name__ == "__main__":
                                                               "Viet Nam" : "Vietnam",
         }
     )
+
+    # Run function again using the alternative colour scheme ...
+    fmc.run(
+        "example.csv",
+        colorByPurpose = True,
+                 debug = False,
+        extraCountries = [
+            "Denmark",
+            "Germany",
+            "Ireland",
+            "Myanmar",
+            "Nepal",
+            "Netherlands",
+            "Russia",
+            "Switzerland",
+        ],
+             flightMap = "example_colorByPurpose.png",
+            notVisited = [
+            "Hong Kong",
+            "Singapore",
+        ],
+               renames = {
+                                        #               airport database → shape database
+                                                               "Türkiye" : "Turkey",
+            "United Kingdom of Great Britain and Northern Ireland (the)" : "United Kingdom",
+                                        "United States of America (the)" : "United States of America",
+                                                              "Viet Nam" : "Vietnam",
+        }
+    )

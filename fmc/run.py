@@ -5,21 +5,22 @@ def run(
     flightLog,
     /,
     *,
+    colorByPurpose = False,
                dat = "airports.dat",
              debug = __debug__,
     extraCountries = None,
          flightMap = None,
           leftDist = 2392.2e3,          # These default values come from my own
-           leftLat = +39.411078,        # personal flight log.
-           leftLon = -97.871822,
+           leftLat = +39.411078,        # personal flight log. These correspond
+           leftLon = -97.871822,        # to the United States Of America.
            maxYear = None,
            minYear = None,
         notVisited = None,
           optimize = True,
            renames = None,
          rightDist = 2345.0e3,          # These default values come from my own
-          rightLat = +49.879310,        # personal flight log.
-          rightLon =  +3.172021,
+          rightLat = +49.879310,        # personal flight log. These correspond
+          rightLon =  +3.172021,        # to Continental Europe.
              strip = True,
            timeout = 60.0,
 ):
@@ -129,10 +130,23 @@ def run(
     if renames is None:
         renames = {}
 
+    # Convert the list of extra countries to a dictionary of extra countries
+    # where the key is the country and the value is the colour to draw it with ...
+    newExtraCountries = {}
+    for extraCountry in extraCountries:
+        newExtraCountries[extraCountry] = (1.0, 0.0, 0.0, 0.25)
+    extraCountries = newExtraCountries
+    del newExtraCountries
+
     # **************************************************************************
 
     # Set the half-width of the bars on the histogram ...
     hw = 0.2
+
+    # Create short-hands ...
+    c0, c1 = matplotlib.rcParams["axes.prop_cycle"].by_key()["color"][:2]
+    c0 = matplotlib.colors.to_rgb(c0)
+    c1 = matplotlib.colors.to_rgb(c1)
 
     # Create figure ...
     # NOTE: I would like to use (4.8, 7.2) so as to be consistent with all my
@@ -270,11 +284,16 @@ def run(
 
             # Add it's distance to the histogram (if it is one of the two
             # recognised fields) ...
+            edgecolor = (1.0, 0.0, 0.0, 1.0)
             match row[3].lower():
                 case "business":
                     businessY[businessX.index(year - hw)] += 0.001 * dist       # [1000 km]
+                    if colorByPurpose:
+                        edgecolor = c0 + (1.0,)
                 case "pleasure":
                     pleasureY[pleasureX.index(year + hw)] += 0.001 * dist       # [1000 km]
+                    if colorByPurpose:
+                        edgecolor = c1 + (1.0,)
                 case _:
                     pass
 
@@ -303,21 +322,21 @@ def run(
             axT.add_geometries(
                 pyguymer3.geo.extract_lines(circle),
                 cartopy.crs.PlateCarree(),
-                edgecolor = (1.0, 0.0, 0.0, 1.0),
+                edgecolor = edgecolor,
                 facecolor = "none",
                 linewidth = 1.0,
             )
             axL.add_geometries(
                 pyguymer3.geo.extract_lines(circle),
                 cartopy.crs.PlateCarree(),
-                edgecolor = (1.0, 0.0, 0.0, 1.0),
+                edgecolor = edgecolor,
                 facecolor = "none",
                 linewidth = 1.0,
             )
             axR.add_geometries(
                 pyguymer3.geo.extract_lines(circle),
                 cartopy.crs.PlateCarree(),
-                edgecolor = (1.0, 0.0, 0.0, 1.0),
+                edgecolor = edgecolor,
                 facecolor = "none",
                 linewidth = 1.0,
             )
@@ -326,20 +345,38 @@ def run(
             country1 = country_of_IATA(airports, iata1)
             country2 = country_of_IATA(airports, iata2)
             if country1 not in extraCountries:
-                extraCountries.append(country1)
+                extraCountries[country1] = (1.0, 0.0, 0.0, 0.25)
+                if colorByPurpose:
+                    match row[3].lower():
+                        case "business":
+                            extraCountries[country1] = c0 + (0.25,)
+                        case "pleasure":
+                            extraCountries[country1] = c1 + (0.25,)
+                        case _:
+                            pass
             if country2 not in extraCountries:
-                extraCountries.append(country2)
+                extraCountries[country2] = (1.0, 0.0, 0.0, 0.25)
+                if colorByPurpose:
+                    match row[3].lower():
+                        case "business":
+                            extraCountries[country2] = c0 + (0.25,)
+                        case "pleasure":
+                            extraCountries[country2] = c1 + (0.25,)
+                        case _:
+                            pass
 
     # Plot histograms ...
     axB.bar(
         businessX,
         businessY,
+        color = c0 + (1.0,),
         label = "Business",
         width = 2.0 * hw,
     )
     axB.bar(
         pleasureX,
         pleasureY,
+        color = c1 + (1.0,),
         label = "Pleasure",
         width = 2.0 * hw,
     )
@@ -391,8 +428,8 @@ def run(
     #       rename countries.
     for country1, country2 in renames.items():
         if country1 in extraCountries:
-            extraCountries.remove(country1)
-            extraCountries.append(country2)
+            extraCountries[country2] = extraCountries[country1]
+            del extraCountries[country1]
 
     # Find file containing all the country shapes ...
     sfile = cartopy.io.shapereader.natural_earth(
@@ -420,46 +457,46 @@ def run(
             axT.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
-                edgecolor = (1.0, 0.0, 0.0, 0.25),
-                facecolor = (1.0, 0.0, 0.0, 0.25),
+                edgecolor = extraCountries[neName],
+                facecolor = extraCountries[neName],
                 linewidth = 0.5,
             )
             axL.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
-                edgecolor = (1.0, 0.0, 0.0, 0.25),
-                facecolor = (1.0, 0.0, 0.0, 0.25),
+                edgecolor = extraCountries[neName],
+                facecolor = extraCountries[neName],
                 linewidth = 0.5,
             )
             axR.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
-                edgecolor = (1.0, 0.0, 0.0, 0.25),
-                facecolor = (1.0, 0.0, 0.0, 0.25),
+                edgecolor = extraCountries[neName],
+                facecolor = extraCountries[neName],
                 linewidth = 0.5,
             )
-            extraCountries.remove(neName)
+            del extraCountries[neName]
         else:
             # Outline the country ...
             axT.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
-                facecolor = (0.0, 0.0, 0.0, 0.0 ),
+                facecolor = "none",
                 linewidth = 0.5,
             )
             axL.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
-                facecolor = (0.0, 0.0, 0.0, 0.0 ),
+                facecolor = "none",
                 linewidth = 0.5,
             )
             axR.add_geometries(
                 pyguymer3.geo.extract_polys(record.geometry),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
-                facecolor = (0.0, 0.0, 0.0, 0.0 ),
+                facecolor = "none",
                 linewidth = 0.5,
             )
 
@@ -480,7 +517,7 @@ def run(
         )
 
     # Print out the countries that were not drawn ...
-    for country in sorted(extraCountries):
+    for country in sorted(list(extraCountries.keys())):
         print(f"\"{country}\" was not drawn.")
 
     # Print out the countries that have been visited ...
