@@ -15,9 +15,12 @@ def run(
            leftLon = -97.871822,        # to the United States Of America.
            maxYear = None,
            minYear = None,
+             nIter = 100,
         notVisited = None,
+         onlyValid = False,
           optimize = True,
            renames = None,
+            repair = False,
          rightDist = 2345.0e3,          # These default values come from my own
           rightLat = +49.879310,        # personal flight log. These correspond
           rightLon =  +3.172021,        # to Continental Europe.
@@ -50,13 +53,20 @@ def run(
         the maximum year to use for the survey
     minyear : int, optional
         the minimum year to use for the survey
+    nIter : int, optional
+        the maximum number of iterations (particularly the Vincenty formula)
     notVisited : list of str, optional
         a list of countries which you have flown to but not visited (e.g., you
         just transferred planes)
+    onlyValid : bool, optional
+        only return valid Polygons (checks for validity can take a while, if
+        being called often)
     optimize : bool, optional
         optimize the PNG map
     renames : dict, optional
         a mapping from OpenFlights country names to Natural Earth country names
+    repair : bool, optional
+        attempt to repair invalid Polygons
     rightDist : float, optional
         the field-of-view around the right-hand sub-map central point (in metres)
     rightLat : float, optional
@@ -158,30 +168,45 @@ def run(
     # Create axes ...
     axT = pyguymer3.geo.add_axis(
         fg,
-        debug = debug,
-        index = (1, 2),
-        ncols = 2,
-        nrows = 3,
+        add_coastlines = True,
+         add_gridlines = True,
+                 debug = debug,
+                 index = (1, 2),
+                 ncols = 2,
+                 nIter = nIter,
+                 nrows = 3,
+             onlyValid = onlyValid,
+                repair = repair,
     )
     axL = pyguymer3.geo.add_axis(
         fg,
-        debug = debug,
-         dist = leftDist,
-        index = 3,
-          lat = leftLat,
-          lon = leftLon,
-        ncols = 2,
-        nrows = 3,
+        add_coastlines = True,
+         add_gridlines = True,
+                 debug = debug,
+                  dist = leftDist,
+                 index = 3,
+                   lat = leftLat,
+                   lon = leftLon,
+                 ncols = 2,
+                 nIter = nIter,
+                 nrows = 3,
+             onlyValid = onlyValid,
+                repair = repair,
     )
     axR = pyguymer3.geo.add_axis(
         fg,
-        debug = debug,
-         dist = rightDist,
-        index = 4,
-          lat = rightLat,
-          lon = rightLon,
-        ncols = 2,
-        nrows = 3,
+        add_coastlines = True,
+         add_gridlines = True,
+                 debug = debug,
+                  dist = rightDist,
+                 index = 4,
+                   lat = rightLat,
+                   lon = rightLon,
+                 ncols = 2,
+                 nIter = nIter,
+                 nrows = 3,
+             onlyValid = onlyValid,
+                repair = repair,
     )
     axB = fg.add_subplot(
         3,
@@ -274,6 +299,7 @@ def run(
                 lat1,
                 lon2,
                 lat2,
+                nIter = nIter,
             )                                                                   # [m]
 
             # Convert m to km ...
@@ -315,26 +341,36 @@ def run(
                 lat2,
                   debug = debug,
                 maxdist = 12.0 * 1852.0,
+                  nIter = nIter,
                  npoint = None,
             )
 
             # Draw the great circle ...
             axT.add_geometries(
-                pyguymer3.geo.extract_lines(circle),
+                pyguymer3.geo.extract_lines(
+                    circle,
+                    onlyValid = onlyValid,
+                ),
                 cartopy.crs.PlateCarree(),
                 edgecolor = edgecolor,
                 facecolor = "none",
                 linewidth = 1.0,
             )
             axL.add_geometries(
-                pyguymer3.geo.extract_lines(circle),
+                pyguymer3.geo.extract_lines(
+                    circle,
+                    onlyValid = onlyValid,
+                ),
                 cartopy.crs.PlateCarree(),
                 edgecolor = edgecolor,
                 facecolor = "none",
                 linewidth = 1.0,
             )
             axR.add_geometries(
-                pyguymer3.geo.extract_lines(circle),
+                pyguymer3.geo.extract_lines(
+                    circle,
+                    onlyValid = onlyValid,
+                ),
                 cartopy.crs.PlateCarree(),
                 edgecolor = edgecolor,
                 facecolor = "none",
@@ -455,21 +491,33 @@ def run(
             # NOTE: Removing them from the list enables us to print out the ones
             #       that where not found later on.
             axT.add_geometries(
-                pyguymer3.geo.extract_polys(record.geometry),
+                pyguymer3.geo.extract_polys(
+                    record.geometry,
+                    onlyValid = onlyValid,
+                       repair = repair,
+                ),
                 cartopy.crs.PlateCarree(),
                 edgecolor = extraCountries[neName],
                 facecolor = extraCountries[neName],
                 linewidth = 0.5,
             )
             axL.add_geometries(
-                pyguymer3.geo.extract_polys(record.geometry),
+                pyguymer3.geo.extract_polys(
+                    record.geometry,
+                    onlyValid = onlyValid,
+                       repair = repair,
+                ),
                 cartopy.crs.PlateCarree(),
                 edgecolor = extraCountries[neName],
                 facecolor = extraCountries[neName],
                 linewidth = 0.5,
             )
             axR.add_geometries(
-                pyguymer3.geo.extract_polys(record.geometry),
+                pyguymer3.geo.extract_polys(
+                    record.geometry,
+                    onlyValid = onlyValid,
+                       repair = repair,
+                ),
                 cartopy.crs.PlateCarree(),
                 edgecolor = extraCountries[neName],
                 facecolor = extraCountries[neName],
@@ -479,21 +527,33 @@ def run(
         else:
             # Outline the country ...
             axT.add_geometries(
-                pyguymer3.geo.extract_polys(record.geometry),
+                pyguymer3.geo.extract_polys(
+                    record.geometry,
+                    onlyValid = onlyValid,
+                       repair = repair,
+                ),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
                 facecolor = "none",
                 linewidth = 0.5,
             )
             axL.add_geometries(
-                pyguymer3.geo.extract_polys(record.geometry),
+                pyguymer3.geo.extract_polys(
+                    record.geometry,
+                    onlyValid = onlyValid,
+                       repair = repair,
+                ),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
                 facecolor = "none",
                 linewidth = 0.5,
             )
             axR.add_geometries(
-                pyguymer3.geo.extract_polys(record.geometry),
+                pyguymer3.geo.extract_polys(
+                    record.geometry,
+                    onlyValid = onlyValid,
+                       repair = repair,
+                ),
                 cartopy.crs.PlateCarree(),
                 edgecolor = (0.0, 0.0, 0.0, 0.25),
                 facecolor = "none",
