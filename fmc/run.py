@@ -6,7 +6,6 @@ def run(
     /,
     *,
     colorByPurpose = False,
-               dat = "airports.dat",
              debug = __debug__,
     extraCountries = None,
          flightMap = None,
@@ -33,9 +32,6 @@ def run(
     ----------
     flightLog : str
         the CSV of your flights
-    dat : str, optional
-        the OpenFlights airport database CSV to load (at time of writing, only
-        "airports.dat" and "airports-extended.dat" will work)
     debug : bool, optional
         print debug messages
     extraCountries : list of str, optional
