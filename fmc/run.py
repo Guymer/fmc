@@ -118,7 +118,7 @@ def run(
         import pyguymer3.geo
         import pyguymer3.image
     except:
-        raise Exception("\"pyguymer3\" is not installed; you need to have the Python module from https://github.com/Guymer/PyGuymer3 located somewhere in your $PYTHONPATH") from None
+        raise Exception("\"pyguymer3\" is not installed; run \"pip install --user PyGuymer3\"") from None
 
     # Import sub-functions ...
     from .coordinates_of_IATA import coordinates_of_IATA
