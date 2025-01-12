@@ -43,29 +43,9 @@ jobs:
                 with:
                     name: python-package-distributions
                     path: dist/
-    # publish-to-pypi:
-    #     name: Publish distribution to PyPI
-    #     if: startsWith(github.ref, 'refs/tags/')                                # Only publish to PyPI on tag pushes.
-    #     needs:
-    #         - build
-    #     runs-on: ubuntu-24.04
-    #     environment:
-    #         name: pypi
-    #         url: https://pypi.org/p/PyGuymer3
-    #     permissions:
-    #         id-token: write                                                     # Mandatory for trusted publishing.
-    #     steps:
-    #         -
-    #             name: Download the distribution packages
-    #             uses: actions/download-artifact@v4                              # https://github.com/actions/download-artifact
-    #             with:
-    #                 name: python-package-distributions
-    #                 path: dist/
-    #         -
-    #             name: Publish distribution to PyPI
-    #             uses: pypa/gh-action-pypi-publish@release/v1                    # https://github.com/pypa/gh-action-pypi-publish
     github-release:
         name: Release distribution on GitHub
+        if: startsWith(github.ref, 'refs/tags/')                                # Only publish to PyPI on tag pushes.
         needs:
             - build
         runs-on: ubuntu-24.04
