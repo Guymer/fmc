@@ -1,0 +1,47 @@
+# NOTE: See https://packaging.python.org/en/latest/tutorials/packaging-projects/
+# NOTE: See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+# NOTE: See https://packaging.python.org/en/latest/specifications/pyproject-toml/
+
+[build-system]
+requires = [
+    "setuptools",                       # NOTE: See https://setuptools.pypa.io/en/latest/userguide/
+    "setuptools_scm",                   # NOTE: See https://setuptools-scm.readthedocs.io/en/latest/usage/
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "FMC"
+description = "Flight Map Creator"
+dynamic = ["version"]
+readme = "README.md"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Thomas Guymer"}
+]
+maintainers = [
+    {name = "Thomas Guymer"}
+]
+classifiers = [                         # NOTE: See https://pypi.org/classifiers/
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: Apache Software License",
+    "Natural Language :: English",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: BSD :: FreeBSD",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [                        # NOTE: See "requirements.txt"
+    "cartopy",
+    "matplotlib",
+    "pyguymer3",
+]
+requires-python = ">=3.10"
+
+[project.urls]
+Homepage = "https://github.com/Guymer/fmc"
+Issues = "https://github.com/Guymer/fmc/issues"
+Funding = "https://github.com/sponsors/Guymer"
+
+[tool.setuptools_scm]
