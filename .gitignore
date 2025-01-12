@@ -14,3 +14,7 @@ __pycache__
 # Hide output of PyLint/ShellCheck ...
 pylint.log
 shellcheck.log
+
+# Ignore compiler generated files ...
+dist
+FMC.egg-info
