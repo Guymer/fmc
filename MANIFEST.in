@@ -1,0 +1,10 @@
+# Make sure that only the Python module part of the Git repository is included
+# in the installation ...
+exclude .editorconfig
+exclude .github/*
+exclude .github/*/*
+exclude .gitignore
+exclude .pylintrc
+exclude .shellcheckrc
+exclude example*
+exclude requirements.txt
