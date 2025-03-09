@@ -1,3 +1,5 @@
+!["mypy" GitHub Action Status](https://github.com/Guymer/fmc/actions/workflows/mypy.yaml/badge.svg) !["publish" GitHub Action Status](https://github.com/Guymer/fmc/actions/workflows/publish.yaml/badge.svg) !["pylint" GitHub Action Status](https://github.com/Guymer/fmc/actions/workflows/pylint.yaml/badge.svg)
+
 # Flight Map Creator (FMC)
 
 This Python 3.x module contains all the functions required to create a map of the world with all of your flights overlaid and all of the countries that you have visited shaded in. It also contains an [example input file](example.csv) so that you know what is required to make it work too. The format for a line is `departure airport IATA code`, `arrival airport IATA code`, `year of flight`, `Business`/`Pleasure`. Whilst the flights do not have to be in order in the CSV file the first flight *does* have to have occurred in the first year (if you don't pass `minYear`).
