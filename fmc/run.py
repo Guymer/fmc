@@ -415,18 +415,12 @@ def run(
         width = 2.0 * hw,
     )
     axB.legend(loc = "upper right")
-    # axB.set_xticks(                                                             # MatPlotLib ≥ 3.5.0
-    #     range(minYear, maxYear + 1),                                            # MatPlotLib ≥ 3.5.0
-    #       labels = range(minYear, maxYear + 1),                                 # MatPlotLib ≥ 3.5.0
-    #           ha = "right",                                                     # MatPlotLib ≥ 3.5.0
-    #     rotation = 45,                                                          # MatPlotLib ≥ 3.5.0
-    # )                                                                           # MatPlotLib ≥ 3.5.0
-    axB.set_xticks(range(minYear, maxYear + 1))                                 # MatPlotLib < 3.5.0
-    axB.set_xticklabels(                                                        # MatPlotLib < 3.5.0
-        range(minYear, maxYear + 1),                                            # MatPlotLib < 3.5.0
-              ha = "right",                                                     # MatPlotLib < 3.5.0
-        rotation = 45,                                                          # MatPlotLib < 3.5.0
-    )                                                                           # MatPlotLib < 3.5.0
+    axB.set_xticks(
+        range(minYear, maxYear + 1),
+          labels = [f"{year:d}" for year in range(minYear, maxYear + 1)],
+              ha = "right",
+        rotation = 45,
+    )
     axB.set_ylabel("Distance [1000 km/year]")
     axB.yaxis.grid(True)
 
