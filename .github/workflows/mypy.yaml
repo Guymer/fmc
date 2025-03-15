@@ -36,4 +36,4 @@ jobs:
                 name: Analyse the Python ${{ matrix.python-version }} code
                 run: |
                     cd main
-                    mypy $(git ls-files "*.py")
+                    mypy $(git ls-files "*.py" | sort)
