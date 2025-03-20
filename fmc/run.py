@@ -47,7 +47,7 @@ def run(
         the longitude of the central point of the left-hand sub-map (in degrees)
     maxYear : int, optional
         the maximum year to use for the survey
-    minyear : int, optional
+    minYear : int, optional
         the minimum year to use for the survey
     nIter : int, optional
         the maximum number of iterations (particularly the Vincenty formula)
@@ -85,6 +85,7 @@ def run(
 
     # Import standard modules ...
     import csv
+    import datetime
     import json
     import os
 
@@ -249,6 +250,28 @@ def run(
     with open(flightLog, "rt", encoding = "utf-8") as fObj:
         # Loop over all flights ...
         for row in csv.reader(fObj):
+            # Extract date that this flight started ...
+            # NOTE: Wouldn't it be nice if "datetime.datetime.fromisoformat()"
+            #       could handle reduced precision?
+            parts = row[2].split("-")
+            match len(parts):
+                case 1:
+                    date = datetime.datetime(
+                         year = int(parts[0]),
+                        month = 1,
+                          day = 1,
+                    )
+                case 2:
+                    date = datetime.datetime(
+                         year = int(parts[0]),
+                        month = int(parts[1]),
+                          day = 1,
+                    )
+                case 3:
+                    date = datetime.datetime.fromisoformat(row[2])
+                case _:
+                    raise ValueError(f"I don't know how to convert \"{row[2]}\" in to a Python datetime object.") from None
+
             # Extract IATA codes for this flight ...
             iata1 = row[0]
             iata2 = row[1]
@@ -256,14 +279,14 @@ def run(
             # Skip this flight if the codes are not what I expect ...
             if len(iata1) != 3 or len(iata2) != 3:
                 if debug:
-                    print(f"DEBUG: A flight does not have valid IATA codes (\"{iata1}\" and \"{iata2}\").")
+                    print(f"DEBUG: A flight does not have valid IATA codes (\"{iata1}\" and/or \"{iata2}\").")
                 continue
 
             # Check if this is the first line ...
             if len(businessX) == 0:
                 # Set the minimum year (if required)...
                 if minYear is None:
-                    minYear = int(row[2][0:4])
+                    minYear = date.year
 
                 # Loop over the full range of years ...
                 for year in range(minYear, maxYear + 1):
@@ -275,16 +298,15 @@ def run(
                     pleasureX.append(year + hw)
                     pleasureY.append(0.0)                                       # [1000 km]
 
-            # Extract the year that this flight started in and skip if it is out
-            # of scope ...
-            year = int(row[2][0:4])
-            if year < minYear:
+            # Skip this flight if the year that this flight started it is out of
+            # scope ...
+            if date.year < minYear:
                 if debug:
-                    print(f"DEBUG: A flight between {iata1} and {iata2} took place in {year:d}, which was before {minYear:d}.")
+                    print(f"DEBUG: A flight between {iata1} and {iata2} took place in {date.year:d}, which was before {minYear:d}.")
                 continue
-            if year > maxYear:
+            if date.year > maxYear:
                 if debug:
-                    print(f"DEBUG: A flight between {iata1} and {iata2} took place in {year:d}, which was after {maxYear:d}.")
+                    print(f"DEBUG: A flight between {iata1} and {iata2} took place in {date.year:d}, which was after {maxYear:d}.")
                 continue
 
             # Find coordinates for this flight ...
@@ -311,11 +333,11 @@ def run(
             edgecolor = (1.0, 0.0, 0.0, 1.0)
             match row[3].lower():
                 case "business":
-                    businessY[businessX.index(year - hw)] += 0.001 * dist       # [1000 km]
+                    businessY[businessX.index(date.year - hw)] += 0.001 * dist  # [1000 km]
                     if colorByPurpose:
                         edgecolor = c0 + (1.0,)
                 case "pleasure":
-                    pleasureY[pleasureX.index(year + hw)] += 0.001 * dist       # [1000 km]
+                    pleasureY[pleasureX.index(date.year + hw)] += 0.001 * dist  # [1000 km]
                     if colorByPurpose:
                         edgecolor = c1 + (1.0,)
                 case _:
