@@ -4,6 +4,7 @@ exclude .editorconfig
 exclude .github/*
 exclude .github/*/*
 exclude .gitignore
+exclude .mypy.ini
 exclude .pylintrc
 exclude .shellcheckrc
 exclude example*
