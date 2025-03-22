@@ -1,0 +1,39 @@
+name: Profile
+
+on: [push]
+
+jobs:
+    build:
+        runs-on: ubuntu-24.04
+        strategy:
+            matrix:
+                python-version: ["3.11", "3.12", "3.13"]
+        steps:
+            -
+                name: Checkout project
+                uses: actions/checkout@v4                                       # https://github.com/actions/checkout
+                with:
+                    path: main
+                    submodules: true
+            -
+                name: Set up Python ${{ matrix.python-version }}
+                uses: actions/setup-python@v5                                   # https://github.com/actions/setup-python
+                with:
+                    python-version: ${{ matrix.python-version }}
+            -
+                name: Install Python ${{ matrix.python-version }} dependencies
+                run: |
+                    python -m pip install --upgrade pip
+                    pip install -r main/requirements.txt
+            -
+                name: List programs
+                run: |
+                    echo "::notice $(which pip)"
+                    echo "::notice $(which python)"
+            -
+                name: Profile the Python ${{ matrix.python-version }} code
+                run: |
+                    cd main
+                    python -m cProfile -o cProfile.log example.py
+                    python -c 'import pstats; p = pstats.Stats("cProfile.log"); p.sort_stats(pstats.SortKey.CUMULATIVE).print_stats("fmc/fmc", 25)'
+                    python -c 'import pstats; p = pstats.Stats("cProfile.log"); p.sort_stats(pstats.SortKey.CUMULATIVE).print_stats("pyguymer3/pyguymer3", 25)'
