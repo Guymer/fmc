@@ -1,0 +1,71 @@
+name: Coverage
+
+on: [push]
+
+jobs:
+    build:
+        # NOTE: On my MacBook Pro, running "example.py" takes 390.77s when
+        #       running it normally but that increases to 472.20s when run
+        #       within "coverage". As of 23/March/2025, I have decided that the
+        #       latter duration is too long to run regularly in GitHub Actions,
+        #       therefore, this GitHub Action is only run on tag pushes now.
+        if: startsWith(github.ref, 'refs/tags/')                                # Only calculate coverage on tag pushes.
+        runs-on: ubuntu-24.04
+        strategy:
+            matrix:
+                python-version: ["3.11", "3.12", "3.13"]
+        steps:
+            -
+                name: Checkout project
+                uses: actions/checkout@v4                                       # https://github.com/actions/checkout
+                with:
+                    path: main
+                    submodules: true
+            -
+                name: Set up Python ${{ matrix.python-version }}
+                uses: actions/setup-python@v5                                   # https://github.com/actions/setup-python
+                with:
+                    python-version: ${{ matrix.python-version }}
+            -
+                name: Install Python dependencies
+                run: |
+                    sudo apt-get install optipng
+            -
+                name: Install Python ${{ matrix.python-version }} dependencies
+                run: |
+                    python -m pip install --upgrade pip
+                    pip install -r main/requirements.txt
+                    pip install coverage
+            -
+                name: List programs
+                run: |
+                    echo "::notice $(which coverage)"
+                    echo "::notice $(which optipng)"
+                    echo "::notice $(which pip)"
+                    echo "::notice $(which python)"
+            -
+                name: Analyse (and test) the Python ${{ matrix.python-version }} code
+                # NOTE: Every function that is included in a "__init__.py" file
+                #       will show at least one line as being covered. Whilst I
+                #       accept that this is accurate it is not useful. See:
+                #         * https://coverage.readthedocs.io/en/7.6.12/faq.html#q-why-are-my-function-definitions-marked-as-run-when-i-haven-t-tested-them
+                run: |
+                    cd main
+                    coverage run example.py
+                    coverage html --directory=coverage-output --include="fmc/*"
+            -
+                name: Upload coverage report (for future download)
+                uses: actions/upload-artifact@v4                                # https://github.com/actions/upload-artifact
+                with:
+                    name: coverage-report (${{ matrix.python-version }})
+                    path: main/coverage-output
+                    compression-level: 9
+
+            # TODO: Once the HTML coverage report has been made then publish it
+            #       to GitHub Pages for everyone to view without logging in to
+            #       GitHub. See:
+            #         * https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-with-a-custom-github-actions-workflow
+            #         * https://github.com/actions/deploy-pages
+            #         * https://github.com/actions/starter-workflows/blob/main/pages/static.yml
+            #       Once it has been published then it will be available at:
+            #         * http://username.github.io/repository
