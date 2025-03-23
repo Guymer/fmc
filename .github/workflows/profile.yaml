@@ -33,6 +33,7 @@ jobs:
             -
                 name: List programs
                 run: |
+                    echo "::notice $(which optipng)"
                     echo "::notice $(which pip)"
                     echo "::notice $(which python)"
             -
