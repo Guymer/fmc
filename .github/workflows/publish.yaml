@@ -41,11 +41,11 @@ jobs:
                 name: Upload the distribution packages
                 uses: actions/upload-artifact@v4                                # https://github.com/actions/upload-artifact
                 with:
-                    name: python-package-distributions (${{ matrix.python-version }})
+                    name: python-package-distributions (Python ${{ matrix.python-version }})
                     path: dist/
     github-release:
         name: Release distribution on GitHub
-        if: startsWith(github.ref, 'refs/tags/')                                # Only publish to PyPI on tag pushes.
+        if: startsWith(github.ref, 'refs/tags/')                                # Only publish to GitHub on tag pushes.
         needs:
             - build
         runs-on: ubuntu-24.04
@@ -57,7 +57,7 @@ jobs:
                 name: Download the distribution packages
                 uses: actions/download-artifact@v4                              # https://github.com/actions/download-artifact
                 with:
-                    name: python-package-distributions (3.11)
+                    name: python-package-distributions (Python 3.11)
                     path: dist/
             -
                 name: Sign distribution with Sigstore

@@ -24,6 +24,7 @@ jobs:
             -
                 name: Install Python dependencies
                 run: |
+                    sudo apt-get install exiftool
                     sudo apt-get install optipng
             -
                 name: Install Python ${{ matrix.python-version }} dependencies
@@ -33,6 +34,7 @@ jobs:
             -
                 name: List programs
                 run: |
+                    echo "::notice $(which exiftool)"
                     echo "::notice $(which optipng)"
                     echo "::notice $(which pip)"
                     echo "::notice $(which python)"
