@@ -250,10 +250,19 @@ def run(
     with open(flightLog, "rt", encoding = "utf-8") as fObj:
         # Loop over all flights ...
         for row in csv.reader(fObj):
-            # Extract date that this flight started ...
+            # Extract date that this flight started (silenty skipping rows which
+            # do not have a four digit year in the date) ...
             # NOTE: Wouldn't it be nice if "datetime.datetime.fromisoformat()"
             #       could handle reduced precision?
             parts = row[2].split("-")
+            if len(parts[0]) != 4:
+                if debug:
+                    print(f"DEBUG: A row has a date column which does not have a year which is four characters long (\"{row[2]}\").")
+                continue
+            if not parts[0].isdigit():
+                if debug:
+                    print(f"DEBUG: A row has a date column which does not have a year which is made up of digits (\"{row[2]}\").")
+                continue
             match len(parts):
                 case 1:
                     date = datetime.datetime(
