@@ -4,6 +4,8 @@
 
 This Python 3.x module contains all the functions required to create a map of the world with all of your flights overlaid and all of the countries that you have visited shaded in. It also contains an [example input file](example.csv) so that you know what is required to make it work too. The format for a line is `departure airport IATA code`, `arrival airport IATA code`, `year of flight`, `Business`/`Pleasure`. If you want, you can add more precision to the `year of flight` column: FMC will *currently* ignore that extra information but you can pass it ISO 8601 format strings like "2018-03-20T11:14:47.459559+00:00" and FMC will work fine. Whilst the flights do not have to be in order in the CSV file the first flight *does* have to have occurred in the first year (if you don't pass `minYear` to the function call).
 
+You may [browse the coverage report](https://guymer.github.io/fmc/) for running [example.py](example.py).
+
 ## Installation
 
 To install FMC, run:
