@@ -592,7 +592,7 @@ def run(
 
     # Optimize PNG (if required) ...
     if optimize:
-        pyguymer3.image.optimize_image(
+        pyguymer3.image.optimise_image(
             flightMap,
               debug = debug,
               strip = strip,
