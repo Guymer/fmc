@@ -17,7 +17,7 @@ def run(
              nIter = 100,
         notVisited = None,
          onlyValid = False,
-          optimize = True,
+          optimise = True,
            renames = None,
             repair = False,
          rightDist = 2345.0e3,          # These default values come from my own
@@ -57,8 +57,8 @@ def run(
     onlyValid : bool, optional
         only return valid Polygons (checks for validity can take a while, if
         being called often)
-    optimize : bool, optional
-        optimize the PNG map
+    optimise : bool, optional
+        optimise the PNG map
     renames : dict, optional
         a mapping from OpenFlights country names to Natural Earth country names
     repair : bool, optional
@@ -591,7 +591,7 @@ def run(
     matplotlib.pyplot.close(fg)
 
     # Optimize PNG (if required) ...
-    if optimize:
+    if optimise:
         pyguymer3.image.optimise_image(
             flightMap,
               debug = debug,
