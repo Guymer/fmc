@@ -2,5 +2,5 @@
 # "check_READMEs.py" script from "https://github.com/Guymer/misc".
 
 cartopy
-matplotlib
-pyguymer3 >= 0.0.9
+matplotlib >= 3.5.0
+pyguymer3 >= 0.0.10
