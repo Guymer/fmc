@@ -25,7 +25,6 @@ classifiers = [                         # NOTE: See https://pypi.org/classifiers
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: Apache Software License",
     "Natural Language :: English",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: POSIX :: BSD :: FreeBSD",
