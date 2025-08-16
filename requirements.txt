@@ -3,4 +3,4 @@
 
 cartopy
 matplotlib >= 3.5.0
-pyguymer3 >= 0.0.10
+pyguymer3 >= 0.0.12
