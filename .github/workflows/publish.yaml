@@ -24,13 +24,13 @@ jobs:
                 with:
                     cache: pip
                     cache-dependency-path: |
-                        main/requirements.txt
+                        requirements.txt
                     python-version: ${{ matrix.python-version }}
             -
                 name: Install Python ${{ matrix.python-version }} dependencies
                 run: |
                     python -m pip install --upgrade pip
-                    pip install -r main/requirements.txt
+                    pip install -r requirements.txt
                     pip install build
             -
                 name: List programs
