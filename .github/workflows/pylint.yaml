@@ -39,4 +39,4 @@ jobs:
                 name: Analyse the Python ${{ matrix.python-version }} code
                 run: |
                     cd main
-                    pylint --rcfile=".pylintrc" --errors-only $(git ls-files "*.py" | sort)
+                    pylint --rcfile=".pylint.ini" --errors-only $(git ls-files "*.py" | sort)
