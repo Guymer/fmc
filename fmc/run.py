@@ -217,24 +217,48 @@ def run(
     )
 
     # Configure axis (top) ...
+    # NOTE: I am explicitly setting the regrid shape based off the resolution
+    #       and the size of (the axis within) the figure, as well as a safety
+    #       factor (remembering Nyquist).
     pyguymer3.geo.add_map_background(
         axT,
-             debug = debug,
-        resolution = "large8192px",
+                debug = debug,
+        interpolation = "gaussian",
+         regrid_shape = (
+            round(2.0 * fg.get_figwidth() * fg.get_dpi()),
+            round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
+        ),
+           resolution = "large8192px",
     )
 
     # Configure axis (left) ...
+    # NOTE: I am explicitly setting the regrid shape based off the resolution
+    #       and the size of (the axis within) the figure, as well as a safety
+    #       factor (remembering Nyquist).
     pyguymer3.geo.add_map_background(
         axL,
-             debug = debug,
-        resolution = "large8192px",
+                debug = debug,
+        interpolation = "gaussian",
+         regrid_shape = (
+            round(2.0 * (fg.get_figwidth() / 2.0) * fg.get_dpi()),
+            round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
+        ),
+           resolution = "large8192px",
     )
 
     # Configure axis (right) ...
+    # NOTE: I am explicitly setting the regrid shape based off the resolution
+    #       and the size of (the axis within) the figure, as well as a safety
+    #       factor (remembering Nyquist).
     pyguymer3.geo.add_map_background(
         axR,
-             debug = debug,
-        resolution = "large8192px",
+                debug = debug,
+        interpolation = "gaussian",
+         regrid_shape = (
+            round(2.0 * (fg.get_figwidth() / 2.0) * fg.get_dpi()),
+            round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
+        ),
+           resolution = "large8192px",
     )
 
     # Load airport list ...
