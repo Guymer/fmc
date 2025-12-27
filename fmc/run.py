@@ -228,6 +228,7 @@ def run(
             round(2.0 * fg.get_figwidth() * fg.get_dpi()),
             round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
         ),
+             resample = False,
            resolution = "large8192px",
     )
 
@@ -243,6 +244,7 @@ def run(
             round(2.0 * (fg.get_figwidth() / 2.0) * fg.get_dpi()),
             round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
         ),
+             resample = False,
            resolution = "large8192px",
     )
 
@@ -258,6 +260,7 @@ def run(
             round(2.0 * (fg.get_figwidth() / 2.0) * fg.get_dpi()),
             round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
         ),
+             resample = False,
            resolution = "large8192px",
     )
 
