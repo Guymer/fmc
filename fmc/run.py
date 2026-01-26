@@ -229,7 +229,7 @@ def run(
             round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
         ),
              resample = False,
-           resolution = "large8192px",
+              subName = "large8192px",
     )
 
     # Configure axis (left) ...
@@ -245,7 +245,7 @@ def run(
             round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
         ),
              resample = False,
-           resolution = "large8192px",
+              subName = "large8192px",
     )
 
     # Configure axis (right) ...
@@ -261,7 +261,7 @@ def run(
             round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
         ),
              resample = False,
-           resolution = "large8192px",
+              subName = "large8192px",
     )
 
     # Load airport list ...
