@@ -7,6 +7,7 @@ def run(
     *,
     colorByPurpose = False,
              debug = __debug__,
+               eps = 1.0e-12,
     extraCountries = None,
          flightMap = None,
           leftDist = 2392.2e3,          # These default values come from my own
@@ -25,6 +26,7 @@ def run(
           rightLon =  +3.168,           # to Continental Europe.
              strip = True,
            timeout = 60.0,
+               tol = 1.0e-10,
 ):
     """Make a PNG map from a CSV file
 
@@ -34,6 +36,8 @@ def run(
         the CSV of your flights
     debug : bool, optional
         print debug messages
+    eps : float, optional
+        the tolerance of the Vincenty formula iterations
     extraCountries : list of str, optional
         a list of extra countries that you have visited but which you have not
         flown to (e.g., you took a train)
@@ -73,6 +77,9 @@ def run(
         strip metadata from PNG map too
     timeout : float, optional
         the timeout for any requests/subprocess calls (in seconds)
+    tol : float, optional
+        the Euclidean distance that defines two points as being the same (in
+        degrees)
 
     Notes
     -----
@@ -157,6 +164,28 @@ def run(
     c0, c1 = matplotlib.rcParams["axes.prop_cycle"].by_key()["color"][:2]
     c0 = matplotlib.colors.to_rgb(c0)
     c1 = matplotlib.colors.to_rgb(c1)
+    leftFov = pyguymer3.geo.buffer(
+        shapely.geometry.point.Point(leftLon, leftLat),
+        leftDist,
+        debug = debug,
+          eps = eps,
+         fill = -1.0,
+         nAng = 361,
+        nIter = nIter,
+         simp = -1.0,
+          tol = tol,
+    )
+    rightFov = pyguymer3.geo.buffer(
+        shapely.geometry.point.Point(rightLon, rightLat),
+        rightDist,
+        debug = debug,
+          eps = eps,
+         fill = -1.0,
+         nAng = 361,
+        nIter = nIter,
+         simp = -1.0,
+          tol = tol,
+    )
 
     # Create figure ...
     # NOTE: I would like to use (4.8, 7.2) so as to be consistent with all my
@@ -171,12 +200,15 @@ def run(
         add_coastlines = True,
          add_gridlines = True,
                  debug = debug,
+                   eps = eps,
+                   fov = pyguymer3.EARTH,
                  index = (1, 2),
                  ncols = 2,
                  nIter = nIter,
                  nrows = 3,
              onlyValid = onlyValid,
                 repair = repair,
+                   tol = tol,
     )
     axL = pyguymer3.geo.add_axis(
         fg,
@@ -184,6 +216,8 @@ def run(
            add_gridlines = True,
                    debug = debug,
                     dist = leftDist,
+                     eps = eps,
+                     fov = leftFov,
                    index = 3,
                      lat = leftLat,
                      lon = leftLon,
@@ -193,6 +227,7 @@ def run(
                onlyValid = onlyValid,
                   repair = repair,
         satellite_height = False,
+                     tol = tol,
     )
     axR = pyguymer3.geo.add_axis(
         fg,
@@ -200,6 +235,8 @@ def run(
            add_gridlines = True,
                    debug = debug,
                     dist = rightDist,
+                     eps = eps,
+                     fov = rightFov,
                    index = 4,
                      lat = rightLat,
                      lon = rightLon,
@@ -209,6 +246,7 @@ def run(
                onlyValid = onlyValid,
                   repair = repair,
         satellite_height = False,
+                     tol = tol,
     )
     axB = fg.add_subplot(
         3,
@@ -358,6 +396,7 @@ def run(
                 lat1,
                 lon2,
                 lat2,
+                  eps = eps,
                 nIter = nIter,
             )                                                                   # [m]
 
@@ -399,6 +438,7 @@ def run(
                 lon2,
                 lat2,
                   debug = debug,
+                    eps = eps,
                 maxdist = 12.0 * 1852.0,
                   nIter = nIter,
                  npoint = None,
