@@ -17,10 +17,10 @@ def run(
            minYear = None,
              nIter = 100,
         notVisited = None,
-         onlyValid = False,
+         onlyValid = True,
           optimise = True,
            renames = None,
-            repair = False,
+            repair = True,
          rightDist = 2345.0e3,          # These default values come from my own
           rightLat = +49.880,           # personal flight log. These correspond
           rightLon =  +3.168,           # to Continental Europe.
