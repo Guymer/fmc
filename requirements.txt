@@ -4,3 +4,4 @@
 cartopy > 0.25.0
 matplotlib >= 3.5.0
 pyguymer3 >= 0.0.12
+shapely

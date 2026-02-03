@@ -78,6 +78,7 @@ FMC requires the following Python modules to be installed and available in your 
 * [cartopy](https://pypi.org/project/Cartopy/)
 * [matplotlib](https://pypi.org/project/matplotlib/)
 * [pyguymer3](https://github.com/Guymer/PyGuymer3)
+* [shapely](https://pypi.org/project/Shapely/)
 
 FMC uses some [Global Self-Consistent Hierarchical High-Resolution Geography](https://www.ngdc.noaa.gov/mgg/shorelines/) resources and some [Natural Earth](https://www.naturalearthdata.com/) resources via the [cartopy](https://pypi.org/project/Cartopy/) module. If they do not exist on your system then [cartopy](https://pypi.org/project/Cartopy/) will download them for you in the background. Consequently, a working internet connection may be required the first time you run FMC.
 
