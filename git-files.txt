@@ -21,6 +21,7 @@ fmc/country_of_IATA.py
 fmc/country_of_ICAO.py
 fmc/db.json
 fmc/run.py
+git-files.txt
 LICENCE.txt
 MANIFEST.in
 pyproject.toml
