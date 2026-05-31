@@ -11,8 +11,8 @@ def run(
     extraCountries = None,
          flightMap = None,
           leftDist = 2392.7e3,          # These default values come from my own
-           leftLat = +39.518,           # personal flight log. These correspond
-           leftLon = -97.762,           # to the United States Of America.
+           leftLat = +39.517,           # personal flight log. These correspond
+           leftLon = -97.763,           # to the United States Of America.
            maxYear = None,
            minYear = None,
              nIter = 100,
@@ -22,8 +22,8 @@ def run(
            renames = None,
             repair = True,
          rightDist = 2346.6e3,          # These default values come from my own
-          rightLat = +49.900,           # personal flight log. These correspond
-          rightLon =  +3.158,           # to Continental Europe.
+          rightLat = +49.901,           # personal flight log. These correspond
+          rightLon =  +3.156,           # to Continental Europe.
              strip = True,
            timeout = 60.0,
                tol = 1.0e-10,
