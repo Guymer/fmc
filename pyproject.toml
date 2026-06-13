@@ -36,7 +36,7 @@ dependencies = [                        # NOTE: See "requirements.txt"
     "matplotlib",
     "pyguymer3",
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 
 [project.urls]
 Homepage = "https://github.com/Guymer/fmc"
