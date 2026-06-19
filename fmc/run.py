@@ -310,7 +310,7 @@ def run(
     )
 
     # Load airport list ...
-    with open(f"{os.path.dirname(__file__)}/db.json", "rt", encoding = "utf-8") as fObj:
+    with open(f"{os.path.dirname(__file__)}/db.json", mode = "rt", encoding = "utf-8") as fObj:
         airports = json.load(fObj)
 
     # Initialize flight dictionary, histograms and total distance ...
@@ -322,7 +322,7 @@ def run(
     total_dist = 0.0                                                            # [km]
 
     # Open flight log ...
-    with open(flightLog, "rt", encoding = "utf-8") as fObj:
+    with open(flightLog, mode = "rt", encoding = "utf-8") as fObj:
         # Loop over all flights ...
         for row in csv.reader(fObj):
             # Extract date that this flight started (silenty skipping rows which
