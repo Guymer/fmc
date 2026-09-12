@@ -10,9 +10,10 @@ def run(
                eps = 1.0e-12,
     extraCountries = None,
          flightMap = None,
-          leftDist = 2392.7e3,          # These default values come from my own
-           leftLat = +39.517,           # personal flight log. These correspond
-           leftLon = -97.763,           # to the United States Of America.
+          leftDist = 2279.3e3,          # These default values come from my own
+           leftLat = +39.626,           # personal flight log. These correspond
+           leftLon = -97.651,           # to North America.
+           leftPad = 12.0 * 1852.0,
            maxYear = None,
            minYear = None,
              nIter = 100,
@@ -21,9 +22,10 @@ def run(
           optimise = True,
            renames = None,
             repair = True,
-         rightDist = 2346.6e3,          # These default values come from my own
+         rightDist = 2234.9e3,          # These default values come from my own
           rightLat = +49.901,           # personal flight log. These correspond
-          rightLon =  +3.156,           # to Continental Europe.
+          rightLon =  +3.155,           # to Continental Europe.
+          rightPad = 12.0 * 1852.0,
              strip = True,
            timeout = 60.0,
                tol = 1.0e-10,
@@ -49,6 +51,8 @@ def run(
         the latitude of the central point of the left-hand sub-map (in degrees)
     leftLon : float, optional
         the longitude of the central point of the left-hand sub-map (in degrees)
+    leftPad : float, optional
+        the padding around the left-hand sub-map central point (in metres)
     maxYear : int, optional
         the maximum year to use for the survey
     minYear : int, optional
@@ -73,6 +77,8 @@ def run(
         the latitude of the central point of the right-hand sub-map (in degrees)
     rightLon : float, optional
         the longitude of the central point of the right-hand sub-map (in degrees)
+    rightPad : float, optional
+        the padding around the right-hand sub-map central point (in metres)
     strip : bool, optional
         strip metadata from PNG map too
     timeout : float, optional
@@ -173,7 +179,7 @@ def run(
     c1 = matplotlib.colors.to_rgb(c1)
     leftFov = pyguymer3.geo.buffer(
         shapely.geometry.point.Point(leftLon, leftLat),
-        leftDist,
+        leftDist + leftPad,
         debug = debug,
           eps = eps,
          fill = -1.0,
@@ -184,7 +190,7 @@ def run(
     )
     rightFov = pyguymer3.geo.buffer(
         shapely.geometry.point.Point(rightLon, rightLat),
-        rightDist,
+        rightDist + rightPad,
         debug = debug,
           eps = eps,
          fill = -1.0,
@@ -222,7 +228,7 @@ def run(
           add_coastlines = True,
            add_gridlines = True,
                    debug = debug,
-                    dist = leftDist,
+                    dist = leftDist + leftPad,
                      eps = eps,
                      fov = leftFov,
                    index = 3,
@@ -241,7 +247,7 @@ def run(
           add_coastlines = True,
            add_gridlines = True,
                    debug = debug,
-                    dist = rightDist,
+                    dist = rightDist + rightPad,
                      eps = eps,
                      fov = rightFov,
                    index = 4,
