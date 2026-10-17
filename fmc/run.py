@@ -102,6 +102,7 @@ def run(
     import json
     import os
     import pathlib
+    import warnings
 
     # Import special modules ...
     try:
@@ -239,7 +240,6 @@ def run(
                    nrows = 3,
                onlyValid = onlyValid,
                   repair = repair,
-        satellite_height = False,
                      tol = tol,
     )
     axR = pyguymer3.geo.add_axis(
@@ -258,7 +258,6 @@ def run(
                    nrows = 3,
                onlyValid = onlyValid,
                   repair = repair,
-        satellite_height = False,
                      tol = tol,
     )
     axB = fg.add_subplot(
@@ -669,9 +668,14 @@ def run(
     # Configure figure ...
     fg.tight_layout()
 
-    # Save figure ...
-    fg.savefig(flightMap)
-    matplotlib.pyplot.close(fg)
+    # Start a context manager for warnings ...
+    with warnings.catch_warnings():
+        # Hide "ignore" level warnings ...
+        warnings.simplefilter("ignore")
+
+        # Save figure ...
+        fg.savefig(flightMap)
+        matplotlib.pyplot.close(fg)
 
     # Optimize PNG (if required) ...
     if optimise:
