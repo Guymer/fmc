@@ -199,8 +199,12 @@ def run(
     c0, c1 = matplotlib.rcParams["axes.prop_cycle"].by_key()["color"][:2]
     c0 = matplotlib.colors.to_rgb(c0)
     c1 = matplotlib.colors.to_rgb(c1)
+    leftPnt = shapely.geometry.point.Point(leftLon, leftLat)
+    rightPnt = shapely.geometry.point.Point(rightLon, rightLat)
+
+    # Calculate field-of-views ...
     leftFov = pyguymer3.geo.buffer(
-        shapely.geometry.point.Point(leftLon, leftLat),
+        leftPnt,
         leftDist + leftPad,
         debug = debug,
           eps = eps,
@@ -211,7 +215,7 @@ def run(
           tol = tol,
     )
     rightFov = pyguymer3.geo.buffer(
-        shapely.geometry.point.Point(rightLon, rightLat),
+        rightPnt,
         rightDist + rightPad,
         debug = debug,
           eps = eps,
@@ -232,7 +236,7 @@ def run(
     # Create axes ...
     axT = pyguymer3.geo.add_axis(
         fg,
-        add_background = True,
+        add_background = False,
         add_coastlines = True,
          add_gridlines = True,
                  debug = debug,
@@ -248,7 +252,7 @@ def run(
     )
     axL = pyguymer3.geo.add_axis(
         fg,
-          add_background = True,
+          add_background = False,
           add_coastlines = True,
            add_gridlines = True,
                    debug = debug,
@@ -267,7 +271,7 @@ def run(
     )
     axR = pyguymer3.geo.add_axis(
         fg,
-          add_background = True,
+          add_background = False,
           add_coastlines = True,
            add_gridlines = True,
                    debug = debug,
