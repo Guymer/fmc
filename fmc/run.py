@@ -7,7 +7,6 @@ def run(
     *,
          chunksize = 1048576,
     colorByPurpose = False,
-          dataPath = None,
              debug = __debug__,
                eps = 1.0e-12,
       exiftoolPath = None,
@@ -44,8 +43,6 @@ def run(
         the CSV of your flights
     chunksize : int, optional
         the size of the chunks of any files which are read in (in bytes)
-    dataPath : None or str, optional
-        the path to the PyGuymer3 "data" folder
     debug : bool, optional
         print debug messages
     eps : float, optional
@@ -185,16 +182,6 @@ def run(
     if renames is None:
         renames = {}
 
-    # Find the path to the PyGuymer3 "data" folder ...
-    if dataPath is None:
-        dataPath = os.path.abspath(f"{pyguymer3.__path__[0]}/data")
-    if not os.path.exists(dataPath):
-        if debug:
-            print(f"INFO: \"{dataPath}\" does not exist.")
-        return
-    if debug:
-        print(f"INFO: The PyGuymer3 \"data\" folder is \"{dataPath}\".")
-
     # Convert the list of extra countries to a dictionary of extra countries
     # where the key is the country and the value is the colour to draw it with ...
     newExtraCountries = {}
@@ -310,7 +297,7 @@ def run(
     pyguymer3.geo.add_raster_tiles(
         axT,
             chunksize = chunksize,
-             dataPath = dataPath,
+             dataPath = None,
                 debug = debug,
          exiftoolPath = exiftoolPath,
                   fov = pyguymer3.EARTH,
@@ -335,7 +322,7 @@ def run(
     pyguymer3.geo.add_raster_tiles(
         axL,
             chunksize = chunksize,
-             dataPath = dataPath,
+             dataPath = None,
                 debug = debug,
          exiftoolPath = exiftoolPath,
                   fov = leftFov,
@@ -360,7 +347,7 @@ def run(
     pyguymer3.geo.add_raster_tiles(
         axR,
             chunksize = chunksize,
-             dataPath = dataPath,
+             dataPath = None,
                 debug = debug,
          exiftoolPath = exiftoolPath,
                   fov = rightFov,
