@@ -3,8 +3,13 @@
 # Use the proper idiom in the main module ...
 # NOTE: See https://docs.python.org/3.13/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
 if __name__ == "__main__":
-    # Import modules ...
-    import fmc
+    # Import my modules ...
+    try:
+        import fmc
+    except:
+        raise Exception("\"fmc\" is not installed; run \"pip install --user git+https://github.com/Guymer/fmc.git\"") from None
+
+    # **************************************************************************
 
     # Run function ...
     fmc.run(
