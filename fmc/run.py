@@ -5,11 +5,16 @@ def run(
     flightLog,
     /,
     *,
+         chunksize = 1048576,
     colorByPurpose = False,
+          dataPath = None,
              debug = __debug__,
                eps = 1.0e-12,
+      exiftoolPath = None,
     extraCountries = None,
          flightMap = None,
+      gifsiclePath = None,
+      jpegtranPath = None,
           leftDist = 2279.3e3,          # These default values come from my own
            leftLat = +39.626,           # personal flight log. These correspond
            leftLon = -97.651,           # to North America.
@@ -20,6 +25,7 @@ def run(
         notVisited = None,
          onlyValid = True,
           optimise = True,
+       optipngPath = None,
            renames = None,
             repair = True,
          rightDist = 2234.9e3,          # These default values come from my own
@@ -36,15 +42,28 @@ def run(
     ----------
     flightLog : str
         the CSV of your flights
+    chunksize : int, optional
+        the size of the chunks of any files which are read in (in bytes)
+    dataPath : None or str, optional
+        the path to the PyGuymer3 "data" folder
     debug : bool, optional
         print debug messages
     eps : float, optional
         the tolerance of the Vincenty formula iterations
+    exiftoolPath : None or str, optional
+        the path to the "exiftool" binary (if not provided then Python will
+        attempt to find the binary itself)
     extraCountries : list of str, optional
         a list of extra countries that you have visited but which you have not
         flown to (e.g., you took a train)
     flightMap : str, optional
         the PNG map
+    gifsiclePath : None or str, optional
+        the path to the "gifsicle" binary (if not provided then Python will
+        attempt to find the binary itself)
+    jpegtranPath : None or str, optional
+        the path to the "jpegtran" binary (if not provided then Python will
+        attempt to find the binary itself)
     leftDist : float, optional
         the field-of-view around the left-hand sub-map central point (in metres)
     leftLat : float, optional
@@ -67,6 +86,9 @@ def run(
         being called often)
     optimise : bool, optional
         optimise the PNG map
+    optipngPath : None or str, optional
+        the path to the "optipng" binary (if not provided then Python will
+        attempt to find the binary itself)
     renames : dict, optional
         a mapping from OpenFlights country names to Natural Earth country names
     repair : bool, optional
@@ -149,6 +171,8 @@ def run(
     from .coordinates_of_IATA import coordinates_of_IATA
     from .country_of_IATA import country_of_IATA
 
+    # **************************************************************************
+
     # Populate default values ...
     if extraCountries is None:
         extraCountries = []
@@ -160,6 +184,16 @@ def run(
         notVisited = []
     if renames is None:
         renames = {}
+
+    # Find the path to the PyGuymer3 "data" folder ...
+    if dataPath is None:
+        dataPath = os.path.abspath(f"{pyguymer3.__path__[0]}/data")
+    if not os.path.exists(dataPath):
+        if debug:
+            print(f"INFO: \"{dataPath}\" does not exist.")
+        return
+    if debug:
+        print(f"INFO: The PyGuymer3 \"data\" folder is \"{dataPath}\".")
 
     # Convert the list of extra countries to a dictionary of extra countries
     # where the key is the country and the value is the colour to draw it with ...
@@ -211,6 +245,7 @@ def run(
     # Create axes ...
     axT = pyguymer3.geo.add_axis(
         fg,
+        add_background = True,
         add_coastlines = True,
          add_gridlines = True,
                  debug = debug,
@@ -226,6 +261,7 @@ def run(
     )
     axL = pyguymer3.geo.add_axis(
         fg,
+          add_background = True,
           add_coastlines = True,
            add_gridlines = True,
                    debug = debug,
@@ -244,6 +280,7 @@ def run(
     )
     axR = pyguymer3.geo.add_axis(
         fg,
+          add_background = True,
           add_coastlines = True,
            add_gridlines = True,
                    debug = debug,
@@ -270,52 +307,83 @@ def run(
     # NOTE: I am explicitly setting the regrid shape based off the resolution
     #       and the size of (the axis within) the figure, as well as a safety
     #       factor (remembering Nyquist).
-    pyguymer3.geo.add_map_background(
+    pyguymer3.geo.add_raster_tiles(
         axT,
+            chunksize = chunksize,
+             dataPath = dataPath,
                 debug = debug,
+         exiftoolPath = exiftoolPath,
+                  fov = pyguymer3.EARTH,
+         gifsiclePath = gifsiclePath,
         interpolation = "gaussian",
+         jpegtranPath = jpegtranPath,
+                 name = "natural-earth-1",
+          optipngPath = optipngPath,
          regrid_shape = (
-            round(2.0 * fg.get_figwidth() * fg.get_dpi()),
+            round(2.0 *  fg.get_figwidth()         * fg.get_dpi()),
             round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
-        ),
+        ),                                                                      # [px], [px]
              resample = False,
-              subName = "large8192px",
+             tileGrid = "18x9",
+              timeout = timeout,
     )
 
     # Configure axis (left) ...
     # NOTE: I am explicitly setting the regrid shape based off the resolution
     #       and the size of (the axis within) the figure, as well as a safety
     #       factor (remembering Nyquist).
-    pyguymer3.geo.add_map_background(
+    pyguymer3.geo.add_raster_tiles(
         axL,
+            chunksize = chunksize,
+             dataPath = dataPath,
                 debug = debug,
+         exiftoolPath = exiftoolPath,
+                  fov = leftFov,
+         gifsiclePath = gifsiclePath,
         interpolation = "gaussian",
+         jpegtranPath = jpegtranPath,
+                 name = "natural-earth-1",
+          optipngPath = optipngPath,
          regrid_shape = (
-            round(2.0 * (fg.get_figwidth() / 2.0) * fg.get_dpi()),
+            round(2.0 * (fg.get_figwidth()  / 2.0) * fg.get_dpi()),
             round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
-        ),
+        ),                                                                      # [px], [px]
              resample = False,
-              subName = "large8192px",
+             tileGrid = "18x9",
+              timeout = timeout,
     )
 
     # Configure axis (right) ...
     # NOTE: I am explicitly setting the regrid shape based off the resolution
     #       and the size of (the axis within) the figure, as well as a safety
     #       factor (remembering Nyquist).
-    pyguymer3.geo.add_map_background(
+    pyguymer3.geo.add_raster_tiles(
         axR,
+            chunksize = chunksize,
+             dataPath = dataPath,
                 debug = debug,
+         exiftoolPath = exiftoolPath,
+                  fov = rightFov,
+         gifsiclePath = gifsiclePath,
         interpolation = "gaussian",
+         jpegtranPath = jpegtranPath,
+                 name = "natural-earth-1",
+          optipngPath = optipngPath,
          regrid_shape = (
-            round(2.0 * (fg.get_figwidth() / 2.0) * fg.get_dpi()),
+            round(2.0 * (fg.get_figwidth()  / 2.0) * fg.get_dpi()),
             round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
-        ),
+        ),                                                                      # [px], [px]
              resample = False,
-              subName = "large8192px",
+             tileGrid = "18x9",
+              timeout = timeout,
     )
 
     # Load airport list ...
-    with open(f"{os.path.dirname(__file__)}/db.json", mode = "rt", encoding = "utf-8") as fObj:
+    with open(
+        f"{os.path.dirname(__file__)}/db.json",
+        encoding = "utf-8",
+            mode = "rt",
+    ) as fObj:
         airports = json.load(fObj)
 
     # Initialize flight dictionary, histograms and total distance ...
@@ -327,7 +395,11 @@ def run(
     total_dist = 0.0                                                            # [km]
 
     # Open flight log ...
-    with open(flightLog, mode = "rt", encoding = "utf-8") as fObj:
+    with open(
+        flightLog,
+        encoding = "utf-8",
+            mode = "rt",
+    ) as fObj:
         # Loop over all flights ...
         for row in csv.reader(fObj):
             # Extract date that this flight started (silenty skipping rows which
@@ -681,9 +753,14 @@ def run(
     if optimise:
         pyguymer3.image.optimise_image(
             flightMap,
-              debug = debug,
-              strip = strip,
-            timeout = timeout,
+               chunksize = chunksize,
+                   debug = debug,
+            exiftoolPath = exiftoolPath,
+            jpegtranPath = jpegtranPath,
+            gifsiclePath = gifsiclePath,
+             optipngPath = optipngPath,
+                   strip = strip,
+                 timeout = timeout,
         )
 
     # Print out the countries that were not drawn ...
