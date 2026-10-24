@@ -10,7 +10,7 @@ def run(
              debug = __debug__,
                eps = 1.0e-12,
       exiftoolPath = None,
-    extraCountries = None,
+    extraCountries = frozenset(),
          flightMap = None,
       gifsiclePath = None,
       jpegtranPath = None,
@@ -21,11 +21,11 @@ def run(
            maxYear = None,
            minYear = None,
              nIter = 100,
-        notVisited = None,
+        notVisited = frozenset(),
          onlyValid = True,
           optimise = True,
        optipngPath = None,
-           renames = None,
+           renames = None,              # TODO: frozendict() in Python 3.15+
             repair = True,
          rightDist = 2234.9e3,          # These default values come from my own
           rightLat = +49.901,           # personal flight log. These correspond
@@ -50,7 +50,7 @@ def run(
     exiftoolPath : None or str, optional
         the path to the "exiftool" binary (if not provided then Python will
         attempt to find the binary itself)
-    extraCountries : list of str, optional
+    extraCountries : set of str, optional
         a list of extra countries that you have visited but which you have not
         flown to (e.g., you took a train)
     flightMap : str, optional
@@ -75,7 +75,7 @@ def run(
         the minimum year to use for the survey
     nIter : int, optional
         the maximum number of iterations (particularly the Vincenty formula)
-    notVisited : list of str, optional
+    notVisited : set of str, optional
         a list of countries which you have flown to but not visited (e.g., you
         just transferred planes)
     onlyValid : bool, optional
@@ -171,14 +171,10 @@ def run(
     # **************************************************************************
 
     # Populate default values ...
-    if extraCountries is None:
-        extraCountries = []
     if flightMap is None:
         flightMap = f'{flightLog.removesuffix(".csv")}.png'
     if maxYear is None:
         maxYear = pyguymer3.now().year
-    if notVisited is None:
-        notVisited = []
     if renames is None:
         renames = {}
 
@@ -755,7 +751,7 @@ def run(
         )
 
     # Print out the countries that were not drawn ...
-    for country in sorted(list(extraCountries.keys())):
+    for country in sorted(list(extraCountries)):
         print(f"\"{country}\" was not drawn.")
 
     # Print out the countries that have been visited ...
