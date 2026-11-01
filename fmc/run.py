@@ -18,6 +18,7 @@ def run(
            leftLat = +39.626,           # personal flight log. These correspond
            leftLon = -97.651,           # to North America.
            leftPad = 12.0 * 1852.0,
+    maxImagePixels = 1073741824,
            maxYear = None,
            minYear = None,
              nIter = 100,
@@ -25,6 +26,7 @@ def run(
          onlyValid = True,
           optimise = True,
        optipngPath = None,
+          ramLimit = 1073741824,
            renames = None,              # TODO: frozendict() in Python 3.15+
             repair = True,
          rightDist = 2234.9e3,          # These default values come from my own
@@ -69,6 +71,8 @@ def run(
         the longitude of the central point of the left-hand sub-map (in degrees)
     leftPad : float, optional
         the padding around the left-hand sub-map central point (in metres)
+    maxImagePixels : int, optional
+        the maximum number of pixels in an image, to prevent decompression bombs
     maxYear : int, optional
         the maximum year to use for the survey
     minYear : int, optional
@@ -86,6 +90,8 @@ def run(
     optipngPath : None or str, optional
         the path to the "optipng" binary (if not provided then Python will
         attempt to find the binary itself)
+    ramLimit : int, optional
+        the maximum RAM usage of each "large" array (in bytes)
     renames : dict, optional
         a mapping from OpenFlights country names to Natural Earth country names
     repair : bool, optional
@@ -202,24 +208,28 @@ def run(
     leftFov = pyguymer3.geo.buffer(
         leftPnt,
         leftDist + leftPad,
-        debug = debug,
-          eps = eps,
-         fill = -1.0,
-         nAng = 361,
-        nIter = nIter,
-         simp = -1.0,
-          tol = tol,
+        attemptFortran = True,
+                 debug = debug,
+                   eps = eps,
+                  fill = -1.0,
+                  nAng = 361,
+                 nIter = nIter,
+              ramLimit = ramLimit,
+                  simp = -1.0,
+                   tol = tol,
     )
     rightFov = pyguymer3.geo.buffer(
         rightPnt,
         rightDist + rightPad,
-        debug = debug,
-          eps = eps,
-         fill = -1.0,
-         nAng = 361,
-        nIter = nIter,
-         simp = -1.0,
-          tol = tol,
+        attemptFortran = True,
+                 debug = debug,
+                   eps = eps,
+                  fill = -1.0,
+                  nAng = 361,
+                 nIter = nIter,
+              ramLimit = ramLimit,
+                  simp = -1.0,
+                   tol = tol,
     )
 
     # Create figure ...
@@ -235,54 +245,63 @@ def run(
         add_background = False,
         add_coastlines = True,
          add_gridlines = True,
+        attemptFortran = True,
                  debug = debug,
+                  dist = None,
                    eps = eps,
                    fov = pyguymer3.EARTH,
                  index = (1, 2),
+                   lat = None,
+                   lon = None,
                  ncols = 2,
                  nIter = nIter,
                  nrows = 3,
              onlyValid = onlyValid,
+              ramLimit = ramLimit,
                 repair = repair,
                    tol = tol,
     )
     axL = pyguymer3.geo.add_axis(
         fg,
-          add_background = False,
-          add_coastlines = True,
-           add_gridlines = True,
-                   debug = debug,
-                    dist = leftDist + leftPad,
-                     eps = eps,
-                     fov = leftFov,
-                   index = 3,
-                     lat = leftLat,
-                     lon = leftLon,
-                   ncols = 2,
-                   nIter = nIter,
-                   nrows = 3,
-               onlyValid = onlyValid,
-                  repair = repair,
-                     tol = tol,
+        add_background = False,
+        add_coastlines = True,
+         add_gridlines = True,
+        attemptFortran = True,
+                 debug = debug,
+                  dist = leftDist + leftPad,
+                   eps = eps,
+                   fov = leftFov,
+                 index = 3,
+                   lat = leftLat,
+                   lon = leftLon,
+                 ncols = 2,
+                 nIter = nIter,
+                 nrows = 3,
+             onlyValid = onlyValid,
+              ramLimit = ramLimit,
+                repair = repair,
+                   tol = tol,
     )
     axR = pyguymer3.geo.add_axis(
         fg,
-          add_background = False,
-          add_coastlines = True,
-           add_gridlines = True,
-                   debug = debug,
-                    dist = rightDist + rightPad,
-                     eps = eps,
-                     fov = rightFov,
-                   index = 4,
-                     lat = rightLat,
-                     lon = rightLon,
-                   ncols = 2,
-                   nIter = nIter,
-                   nrows = 3,
-               onlyValid = onlyValid,
-                  repair = repair,
-                     tol = tol,
+        add_background = False,
+        add_coastlines = True,
+         add_gridlines = True,
+        attemptFortran = True,
+                 debug = debug,
+                  dist = rightDist + rightPad,
+                   eps = eps,
+                   fov = rightFov,
+                 index = 4,
+                   lat = rightLat,
+                   lon = rightLon,
+                 ncols = 2,
+                 nIter = nIter,
+                 nrows = 3,
+             onlyValid = onlyValid,
+              ramLimit = ramLimit,
+                repair = repair,
+                   tol = tol,
     )
     axB = fg.add_subplot(
         3,
@@ -296,23 +315,24 @@ def run(
     #       factor (remembering Nyquist).
     pyguymer3.geo.add_raster_tiles(
         axT,
-            chunksize = chunksize,
-             dataPath = None,
-                debug = debug,
-         exiftoolPath = exiftoolPath,
-                  fov = pyguymer3.EARTH,
-         gifsiclePath = gifsiclePath,
-        interpolation = "gaussian",
-         jpegtranPath = jpegtranPath,
-                 name = "natural-earth-1",
-          optipngPath = optipngPath,
-         regrid_shape = (
+             chunksize = chunksize,
+              dataPath = None,
+                 debug = debug,
+          exiftoolPath = exiftoolPath,
+                   fov = pyguymer3.EARTH,
+          gifsiclePath = gifsiclePath,
+         interpolation = "gaussian",
+          jpegtranPath = jpegtranPath,
+        maxImagePixels = maxImagePixels,
+                  name = "natural-earth-1",
+           optipngPath = optipngPath,
+          regrid_shape = (
             round(2.0 *  fg.get_figwidth()         * fg.get_dpi()),
             round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
         ),                                                                      # [px], [px]
-             resample = False,
-             tileGrid = "18x9",
-              timeout = timeout,
+              resample = False,
+              tileGrid = "18x9",
+               timeout = timeout,
     )
 
     # Configure axis (left) ...
@@ -321,23 +341,24 @@ def run(
     #       factor (remembering Nyquist).
     pyguymer3.geo.add_raster_tiles(
         axL,
-            chunksize = chunksize,
-             dataPath = None,
-                debug = debug,
-         exiftoolPath = exiftoolPath,
-                  fov = leftFov,
-         gifsiclePath = gifsiclePath,
-        interpolation = "gaussian",
-         jpegtranPath = jpegtranPath,
-                 name = "natural-earth-1",
-          optipngPath = optipngPath,
-         regrid_shape = (
+             chunksize = chunksize,
+              dataPath = None,
+                 debug = debug,
+          exiftoolPath = exiftoolPath,
+                   fov = leftFov,
+          gifsiclePath = gifsiclePath,
+         interpolation = "gaussian",
+          jpegtranPath = jpegtranPath,
+        maxImagePixels = maxImagePixels,
+                  name = "natural-earth-1",
+           optipngPath = optipngPath,
+          regrid_shape = (
             round(2.0 * (fg.get_figwidth()  / 2.0) * fg.get_dpi()),
             round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
         ),                                                                      # [px], [px]
-             resample = False,
-             tileGrid = "18x9",
-              timeout = timeout,
+              resample = False,
+              tileGrid = "18x9",
+               timeout = timeout,
     )
 
     # Configure axis (right) ...
@@ -346,23 +367,24 @@ def run(
     #       factor (remembering Nyquist).
     pyguymer3.geo.add_raster_tiles(
         axR,
-            chunksize = chunksize,
-             dataPath = None,
-                debug = debug,
-         exiftoolPath = exiftoolPath,
-                  fov = rightFov,
-         gifsiclePath = gifsiclePath,
-        interpolation = "gaussian",
-         jpegtranPath = jpegtranPath,
-                 name = "natural-earth-1",
-          optipngPath = optipngPath,
-         regrid_shape = (
+             chunksize = chunksize,
+              dataPath = None,
+                 debug = debug,
+          exiftoolPath = exiftoolPath,
+                   fov = rightFov,
+          gifsiclePath = gifsiclePath,
+         interpolation = "gaussian",
+          jpegtranPath = jpegtranPath,
+        maxImagePixels = maxImagePixels,
+                  name = "natural-earth-1",
+           optipngPath = optipngPath,
+          regrid_shape = (
             round(2.0 * (fg.get_figwidth()  / 2.0) * fg.get_dpi()),
             round(2.0 * (fg.get_figheight() / 3.0) * fg.get_dpi()),
         ),                                                                      # [px], [px]
-             resample = False,
-             tileGrid = "18x9",
-              timeout = timeout,
+              resample = False,
+              tileGrid = "18x9",
+               timeout = timeout,
     )
 
     # Load airport list ...
@@ -508,11 +530,12 @@ def run(
                 lat1,
                 lon2,
                 lat2,
-                  debug = debug,
-                    eps = eps,
-                maxdist = 12.0 * 1852.0,
-                  nIter = nIter,
-                 npoint = None,
+                   debug = debug,
+                     eps = eps,
+                 maxdist = 12.0 * 1852.0,
+                   nIter = nIter,
+                  npoint = None,
+                ramLimit = ramLimit,
             )
 
             # Draw the great circle ...
